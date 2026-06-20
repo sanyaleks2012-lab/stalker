@@ -66,15 +66,12 @@ class Record {
   Record(this.tree, this.metadata) {
     root = tree.findAllElements("Root").first;
 
-    if (tree
-        .xpath(
-            "//Currencies[@ForgeMaterial1 and @ForgeMaterial2 and @ForgeMaterial3]")
-        .isEmpty) {
-      tree.xpath("//Currencies").first.attributes.addAll([
-        XmlAttribute(XmlName("ForgeMaterial1"), "0"),
-        XmlAttribute(XmlName("ForgeMaterial2"), "0"),
-        XmlAttribute(XmlName("ForgeMaterial3"), "0")
-      ]);
+    for (var e in ["1", "2", "3"]) {
+      if (tree.xpath("//Currencies[@ForgeMaterial$e]").isEmpty) {
+        tree.xpath("//Currencies").first.attributes.add(
+              XmlAttribute(XmlName("ForgeMaterial$e"), "0"),
+            );
+      }
     }
     equipment = {for (var e in EquipmentType.values) e: _parseEquipment(e)};
   }
