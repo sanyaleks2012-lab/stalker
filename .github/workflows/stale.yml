@@ -26,5 +26,5 @@ jobs:
           close-issue-message: >
             Closing as stale.
 
-          exempt-issue-labels: "pinned,security"
+          exempt-issue-labels: "pinned,security,enhancement,documentation,bug"
           operations-per-run: 100
