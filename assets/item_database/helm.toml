@@ -1094,6 +1094,11 @@ name = "Diadem of Despair"
 traits = ["offer"]
 enchantments = ["shielding"]
 
+[HELM_RAID_SUMMER_FEST_26]
+name = "Rh1thm"
+traits = ["offer", "summer_fest_26"]
+enchantments = ["damage_absorption"]
+
 [HELM_BP_S5_TIME_SHIFTER]
 name = "Stonecold"
 traits = [

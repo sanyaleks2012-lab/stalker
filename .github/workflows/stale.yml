@@ -1,0 +1,25 @@
+name: Close inactive issues
+
+on:
+  schedule:
+    - cron: "0 3 * * *"
+  workflow_dispatch:
+
+jobs:
+  stale:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/stale@v9
+        with:
+          days-before-stale: 27
+          days-before-close: 3
+
+          stale-issue-message: >
+            This issue was marked as stale, closing in 3 days.
+
+          close-issue-message: >
+            Closing as stale.
+
+          exempt-issue-labels: "pinned,security"
+          operations-per-run: 100

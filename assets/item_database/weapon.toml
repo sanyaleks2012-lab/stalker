@@ -1410,6 +1410,11 @@ name = "Lily's Heart"
 traits = ["offer"]
 enchantments = ["magic_recharge"]
 
+[WEAPON_BAT_RAID_SUMMER_FEST_26]
+name = "Imp4ct"
+traits = ["offer", "summer_fest_26"]
+enchantments = ["time_bomb"]
+
 [WEAPON_1_HW19_SET]
 name = "Winged Darkness` Claws"
 description = "Claws of Winged Darkness is a Halloween 2019 special weapon in Shadow Fight 2. It was obtainable during Halloween 2019 update, as a possible reward by purchasing the Chest of Nightmare. In order to purchase the chest, players needed 350 Raven tokens or 149 gems. Raven coins could be obtained by defeating the witch sisters, the Halloween 2019 special raid-bosses. The scythe came enchanted with the Magic Recharge enchantment."
