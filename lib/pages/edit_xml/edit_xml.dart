@@ -1,26 +1,8 @@
-/* 
- * Stalker
- * Copyright (C) 2025 Andreno
- * 
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <https://www.gnu.org/licenses/>.
- */
-
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:stalker/pages/edit_xml/text_search_bar.dart';
-import 'package:stalker/logic/record.dart';
-import 'package:stalker/logic/records_manager.dart';
+import 'package:detool64/pages/edit_xml/text_search_bar.dart';
+import 'package:detool64/logic/record.dart';
+import 'package:detool64/logic/records_manager.dart';
 import 'package:xml/xml.dart';
 
 class EditXmlPage extends StatefulWidget {

@@ -1,30 +1,11 @@
-/* 
- * Stalker
- * Copyright (C) 2025 Andreno
- * 
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <https://www.gnu.org/licenses/>.
- */
-
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
 import 'package:log_plus/log_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:signals/signals_flutter.dart';
-import 'package:stalker/app.dart';
-import 'package:stalker/logic/item_database.dart';
-import 'package:stalker/pages/settings.dart';
-import 'package:stalker/themes.dart';
+import 'package:detool64/app.dart';
+import 'package:detool64/logic/item_database.dart';
+import 'package:detool64/themes.dart';
 
 Logs constructLogger() {
   return logger = Logs(
@@ -46,7 +27,6 @@ void main() async {
 Future<void> loadPrefsValues() async {
   final prefs = await SharedPreferences.getInstance();
   await loadThemeFromPrefs(prefs);
-  ignoreUpdates.value = prefs.getBool("ignoreUpdates") ?? false;
 }
 
 class RootApp extends StatefulWidget {
@@ -109,7 +89,7 @@ class _RootAppState extends State<RootApp> {
               theme: lightTheme,
               darkTheme: darkTheme,
               themeMode: brightness_,
-              title: "Stalker++",
+              title: "DETool64",
               home: const App());
         });
       },

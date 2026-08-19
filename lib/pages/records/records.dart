@@ -1,21 +1,3 @@
-/* 
- * Stalker
- * Copyright (C) 2025 Andreno
- * 
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <https://www.gnu.org/licenses/>.
- */
-
 // ignore_for_file: use_build_context_synchronously
 
 import 'dart:io';
@@ -26,10 +8,10 @@ import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
-import 'package:stalker/app.dart';
-import 'package:stalker/pages/records/new_record.dart';
-import 'package:stalker/logic/record.dart';
-import 'package:stalker/logic/records_manager.dart';
+import 'package:detool64/app.dart';
+import 'package:detool64/pages/records/new_record.dart';
+import 'package:detool64/logic/record.dart';
+import 'package:detool64/logic/records_manager.dart';
 import 'package:xml/xml.dart';
 
 class RecordsPage extends StatefulWidget {
@@ -182,7 +164,7 @@ class _RecordsPageState extends State<RecordsPage> {
                           RecordsManager.saveRecordWithToast(
                               RecordsManager.activeRecord!);
                         },
-                        child: const Text("Regenerate hash file"))
+                        child: const Text("Overwrite on disk"))
                     : FilledButton(
                         onPressed: () {
                           setState(() {

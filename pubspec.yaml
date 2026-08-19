@@ -1,8 +1,8 @@
-name: stalker
-description: "An android application to view and optionally modify the save files of Shadow Fight 2 game"
+name: detool64
+description: "An android application to view and optionally modify the save files of Shadow Fight 2 Definitve Edition"
 publish_to: 'none'
 
-version: 3.0.3
+version: 0.0.2
 
 environment:
   sdk: ^3.5.4
@@ -19,14 +19,11 @@ dependencies:
   shared_preferences: ^2.5.3
   package_info_plus: ^8.3.0
   url_launcher: ^6.3.1
-  device_info_plus: ^11.3.0
   dynamic_color: ^1.7.0
   share_plus: ^11.0.0
   file_picker: ^10.1.9
   toml: ^0.16.0
   uuid: ^4.5.1
-  crypto: ^3.0.6
-  pub_semver: ^2.2.0
   log_plus: ^0.0.6
 
 dev_dependencies:
@@ -58,13 +55,15 @@ flutter:
     - assets/images/helm.png
     - assets/images/weapons.png
     - assets/images/treasure-chest.png
-    - assets/binaries/setup_service64
-    - assets/binaries/setup_service32
-    - assets/binaries/setup_service_x86_64
     - assets/xml/defaultRecord.xml
     - assets/enchantments/simple.toml
     - assets/enchantments/medium.toml
-    - assets/enchantments/mythical.toml
+    - assets/enchantments/complex_1.toml
+    - assets/enchantments/complex_2.toml
+    - assets/enchantments/complex_3.toml
+    - assets/enchantments/special_1.toml
+    - assets/enchantments/special_2.toml
+    - assets/enchantments/special_3.toml
     - assets/item_database/weapon.toml
     - assets/item_database/ranged.toml
     - assets/item_database/magic.toml

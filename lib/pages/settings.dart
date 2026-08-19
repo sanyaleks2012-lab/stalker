@@ -1,30 +1,8 @@
-/* 
- * Stalker
- * Copyright (C) 2025 Andreno
- * 
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <https://www.gnu.org/licenses/>.
- */
-
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:signals/signals_flutter.dart';
-import 'package:stalker/app.dart';
-import 'package:stalker/pages/about.dart';
-import 'package:stalker/logic/records_manager.dart';
-import 'package:stalker/themes.dart';
-
-final ignoreUpdates = signal(false);
+import 'package:detool64/app.dart';
+import 'package:detool64/pages/about.dart';
+import 'package:detool64/themes.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
@@ -117,22 +95,6 @@ class _SettingsPageState extends State<SettingsPage> {
                   ),
                 ),
                 const Divider(),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  spacing: 8,
-                  children: [
-                    Text("Ignore updates", style: theme.textTheme.bodyLarge),
-                    Watch(
-                      (_) => Switch(
-                          value: ignoreUpdates.value,
-                          onChanged: (newValue) async {
-                            final prefs = await SharedPreferences.getInstance();
-                            prefs.setBool("ignoreUpdates", newValue);
-                            ignoreUpdates.value = newValue;
-                          }),
-                    )
-                  ],
-                ),
                 TextButton(
                   style: TextButton.styleFrom(
                     padding: const EdgeInsets.symmetric(
@@ -162,11 +124,6 @@ class _SettingsPageState extends State<SettingsPage> {
                 Center(
                     child: Text(
                   "${package.value!.packageName} ${package.value!.version}",
-                  style: theme.textTheme.labelSmall,
-                )),
-                Center(
-                    child: Text(
-                  "userid: ${RecordsManager.userid}",
                   style: theme.textTheme.labelSmall,
                 )),
               ],

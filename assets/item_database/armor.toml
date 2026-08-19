@@ -343,19 +343,6 @@ enchantments = [
   "damage_absorption",
 ]
 
-[ARMOR_UNKNOWN]
-name = "Unknown Armor"
-traits = [
-  "defunct",
-]
-
-[ARMOR_C3_z3]
-name = ""
-description = "An obsolete equipment code for Sentinel's set early prototype."
-traits = [
-  "defunct",
-]
-
 [ARMOR_HW14_WICKED_VEIL]
 name = "Wicked Veil"
 traits = [
@@ -720,7 +707,7 @@ traits = [
   "unobtainable",
 ]
 
-[BERSTUUK_BODY]
+[BODY_BERSTUUK]
 name = "Berstuuk's Body"
 traits = [
   "unobtainable",
@@ -1041,11 +1028,33 @@ enchantments = [
 
 [ARMOR_NY18_MANTLE]
 name = "Padded Jacket"
-traits = [
-  "ny18",
-  "nintendo_switch_edition",
-]
-enchantments = [
-  "shielding",
-]
+traits = ["ny18", "nintendo_switch_edition"]
+enchantments = ["shielding"]
 
+[BODY_BIRD]
+name = "Bird’s Form"
+traits = ["cosmetic"]
+
+[BODY_BRAWLER]
+name = "Brawler's Form"
+traits = ["cosmetic"]
+
+[BODY_BULL]
+name = "Bull’s Form"
+traits = ["cosmetic"]
+
+[BODY_MEPHISTO]
+name = "Mephisto’s Form"
+traits = ["cosmetic"]
+
+[BODY_SHADOW]
+name = "Invisible Armour"
+traits = ["cosmetic"]
+
+[BODY_WHALER]
+name = "Whaler's Form"
+traits = ["cosmetic"]
+
+[BODY_WOLF]
+name = "Wolf’s Form"
+traits = ["cosmetic"]

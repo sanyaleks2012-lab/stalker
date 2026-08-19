@@ -1,4 +1,4 @@
-package com.onerdna.stalker
+package com.onerdna.detool64
 
 import android.content.ComponentName
 import android.content.ServiceConnection
@@ -15,7 +15,7 @@ import rikka.shizuku.Shizuku.UserServiceArgs
 
 class MainActivity : FlutterActivity() {
     @Keep
-    private val shizukuChannel = "com.onerdna.stalker/shizuku"
+    private val shizukuChannel = "com.onerdna.detool64/shizuku"
     @Keep
     private var binderService: IBinderService? = null
 

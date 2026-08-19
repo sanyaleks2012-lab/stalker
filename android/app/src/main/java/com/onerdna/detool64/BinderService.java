@@ -1,4 +1,4 @@
-package com.onerdna.stalker;
+package com.onerdna.detool64;
 
 import android.util.Log;
 

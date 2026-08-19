@@ -1,29 +1,11 @@
-/* 
- * Stalker
- * Copyright (C) 2025 Andreno
- * 
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <https://www.gnu.org/licenses/>.
- */
-
 import 'package:flutter/material.dart';
 import 'package:signals/signals_flutter.dart';
-import 'package:stalker/app.dart';
-import 'package:stalker/pages/debug.dart';
-import 'package:stalker/pages/settings.dart';
+import 'package:detool64/app.dart';
+import 'package:detool64/pages/debug.dart';
+import 'package:detool64/pages/settings.dart';
 
-class StalkerAppBar extends StatelessWidget implements PreferredSizeWidget {
-  const StalkerAppBar({super.key});
+class MainAppBar extends StatelessWidget implements PreferredSizeWidget {
+  const MainAppBar({super.key});
 
   @override
   Widget build(BuildContext _) {
@@ -52,7 +34,7 @@ class StalkerAppBar extends StatelessWidget implements PreferredSizeWidget {
                         ),
                     ],
                   )),
-              const Center(child: Text("Stalker")),
+              const Center(child: Text("DETool64")),
               Align(
                 alignment: Alignment.centerRight,
                 child: IconButton(

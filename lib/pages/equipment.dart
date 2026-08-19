@@ -1,31 +1,11 @@
-/* 
- * Stalker
- * Copyright (C) 2025 Andreno
- * 
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <https://www.gnu.org/licenses/>.
- */
-
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:stalker/logic/equipment_type.dart';
-import 'package:stalker/logic/equipment.dart';
-import 'package:stalker/logic/item_database.dart';
-import 'package:stalker/pages/equipment_manager.dart';
-import 'package:stalker/pages/inventory_view/inventory_view.dart';
-import 'package:stalker/logic/records_manager.dart';
+import 'package:detool64/logic/equipment_type.dart';
+import 'package:detool64/logic/item_database.dart';
+import 'package:detool64/pages/equipment_manager.dart';
+import 'package:detool64/pages/inventory_view/inventory_view.dart';
+import 'package:detool64/logic/records_manager.dart';
 
 class EquipmentPage extends StatefulWidget {
   const EquipmentPage({super.key});

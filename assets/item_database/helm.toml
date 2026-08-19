@@ -376,26 +376,6 @@ traits = [
   "deceased",
 ]
 
-[HELM_C3_z3]
-name = ""
-description = "An obsolete equipment code for Sentinel's set early prototype."
-traits = [
-  "defunct",
-]
-
-[HEAD_C3_z3]
-name = ""
-description = "An obsolete equipment code for Sentinel's set early prototype."
-traits = [
-  "defunct",
-]
-
-[HELM_UNKNOWN]
-name = "Unknown Helm"
-traits = [
-  "defunct",
-]
-
 [HELM_HW14_PUMPKIN]
 name = "Pumpkinhead"
 traits = [
@@ -1093,11 +1073,6 @@ enchantments = [
 name = "Diadem of Despair"
 traits = ["offer"]
 enchantments = ["shielding"]
-
-[HELM_RAID_SUMMER_FEST_26]
-name = "Rh1thm"
-traits = ["offer", "summer_fest_26"]
-enchantments = ["damage_absorption"]
 
 [HELM_BP_S5_TIME_SHIFTER]
 name = "Stonecold"

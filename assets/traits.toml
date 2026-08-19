@@ -62,10 +62,6 @@ color = "0xFFFFE082"
 display = "Summer Fest 2025"
 color = "0xFFFFE100"
 
-[summer_fest_26]
-display = "Summer Fest 2026"
-color = "0xFFFFE100"
-
 [set_monk]
 display = "Monk Set"
 color = "0xFF3CB371"
@@ -321,3 +317,13 @@ color = "0xFFE57373"
 [chny24]
 display = "Chinese New Year 2024"
 color = "0xFFE57373"
+
+# Traits added by DE
+
+[revived]
+display = "Revived"
+color = "0x499A13AA"
+
+[cosmetic]
+display = "Cosmetic"
+color = "0x454040FF"

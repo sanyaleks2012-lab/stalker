@@ -169,19 +169,6 @@ enchantments = [
   "poisoning",
 ]
 
-[RANGED_C3_z3]
-name = ""
-description = "An obsolete equipment code for Sentinel's set early prototype."
-traits = [
-  "defunct",
-]
-
-[RANGED_UNKNOWN]
-name = "Unknown Ranged Weapon"
-traits = [
-  "defunct",
-]
-
 [ABILITY_SATURN_BLASTER]
 name = "Saturn's Blaster"
 description = "used by a \"Player\" entity as a weapon"

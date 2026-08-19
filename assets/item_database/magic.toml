@@ -142,13 +142,6 @@ traits = [
   "defunct",
 ]
 
-[MAGIC_C3_z3]
-name = ""
-description = "An obsolete equipment code for Sentinel's set early prototype."
-traits = [
-  "defunct",
-]
-
 [MAGIC_HIT_BOX]
 name = ""
 traits = [
@@ -176,12 +169,6 @@ traits = [
 [MAGIC_RESURRECTED_25]
 name = "Inner Rebellion"
 description = "It is mentioned in the game files. The functionality of magic is unknown"
-traits = [
-  "defunct",
-]
-
-[MAGIC_UNKNOWN]
-name = "Unknown Power"
 traits = [
   "defunct",
 ]
@@ -439,13 +426,6 @@ traits = [
   "unobtainable",
 ]
 
-[MAGIC_MIND_THROW_NORMAL]
-name = "Mind Throw Shadow"
-description = "Shadow forms a blue energy orb in his hand, then sends another towards the player while holding the original. On impact, Enemy is choked and becomes immobile. Titan then uses the orb to lift Shadow, hold him slightly and slam him back onto the ground."
-traits = [
-  "unobtainable",
-]
-
 [MAGIC_DARK_WAVE]
 name = "Dark Wave"
 description = "Magic that looks like Force Wave, but is black in color instead of white. The magic then became available to the player as Sloe Thorn. Used by Fatum, Karcer, The Blackness, Morgana, Banshee, Puppeteer, Faradeya and Ninja."
@@ -567,3 +547,30 @@ traits = [
 enchantments = [
   "bloodrage",
 ]
+
+[Sphere1]
+name = "Minor Charge of Darkness"
+enchantments = ["weakness"]
+
+[Sphere2]
+name = "Medium Charge of Darkness"
+enchantments = ["stun"]
+
+[Sphere3]
+name = "Large Charge of Darkness"
+description = "Compared to Blast of the Void, starts slower and has more endlag, ragdoll launches the enemy up but has a bigger hit radius and deals more damage"
+enchantments = ["lifesteal"]
+
+[ComboSphere3]
+name = "Blast of the Void"
+description = "Compared to Large Charge of Darkness, starts faster, has less endlag, doesn't ragdoll, you can use it to start combos, but it's smaller and deals less damage"
+enchantments = ["enfeeble"]
+
+[MAGIC_MIND_THROW_NORMAL]
+name = "Mind Throw"
+description = "Normal-sized alternative of Titan's Mind Throw"
+enchantments = ["frenzy"]
+
+[MAGIC_LIGHTNING]
+name = "Lightning Arc"
+enchantments = ["enfeeble"]

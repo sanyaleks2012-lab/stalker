@@ -740,19 +740,6 @@ traits = [
   "defunct",
 ]
 
-[WEAPON_UNKNOWN]
-name = "Unknown Weapon"
-traits = [
-  "defunct",
-]
-
-[WEAPON_C3_z3]
-name = ""
-description = "An obsolete equipment code for Sentinel's set early prototype."
-traits = [
-  "defunct",
-]
-
 [WEAPON_HW14_BROOM]
 name = "Broomstick"
 description = "Broomstick is a Halloween 2014 special weapon in Shadow Fight 2. It was available in the shop during Halloween 2014 update, and could only be bought for gems. Broomstick works like Staff."
@@ -1196,7 +1183,7 @@ traits = [
 ]
 
 [WEAPON_GIANT_SWORD]
-name = "Giant Sword"
+name = "Desolator"
 description = "A weapon that appears to be a smaller version of Titan's Desolator. It has a white blade and black handles instead of metallic navy blue like Titan's. In the 2018 New Year's dojo, a Desolator wrapped in a purple ribbon can be seen on the left."
 traits = ["unobtainable", "deceased"]
 
@@ -1410,11 +1397,6 @@ name = "Lily's Heart"
 traits = ["offer"]
 enchantments = ["magic_recharge"]
 
-[WEAPON_BAT_RAID_SUMMER_FEST_26]
-name = "Imp4ct"
-traits = ["offer", "summer_fest_26"]
-enchantments = ["time_bomb"]
-
 [WEAPON_1_HW19_SET]
 name = "Winged Darkness` Claws"
 description = "Claws of Winged Darkness is a Halloween 2019 special weapon in Shadow Fight 2. It was obtainable during Halloween 2019 update, as a possible reward by purchasing the Chest of Nightmare. In order to purchase the chest, players needed 350 Raven tokens or 149 gems. Raven coins could be obtained by defeating the witch sisters, the Halloween 2019 special raid-bosses. The scythe came enchanted with the Magic Recharge enchantment."
@@ -1483,12 +1465,7 @@ enchantments = [
 [WEAPON_BP_S1_GUARDIAN]
 name = "Beast's Fury"
 description = "Beast's Fury is a special weapon in Shadow Fight 2. It is the weapon of the Forest Guardian Set. This weapon is obtainable through the Battle Pass during Christmas and New Year 2022 and 2025 event, by purchase Premium Pass to unlock VIP rewards. Beast's Fury was wielded by Shurale, who was the main boss of the event."
-traits = [
-  "set_forest_guardian",
-  "xmas21",
-  "ny22",
-  "ny25"
-]
+traits = ["set_forest_guardian", "xmas21", "ny22", "ny25"]
 enchantments = [
   "icy_resistance",
 ]
@@ -1602,7 +1579,7 @@ description = "Surprise Waffles are a New Year 2018 and 2019 special weapon in S
 traits = [
   "nintendo_switch_edition",
   "ny18",
-  "ny19" # can't find whether is this true, but candy was wielding this weapon in NY19 event
+  "ny19"  # can't find whether is this true, but candy was wielding this weapon in NY19 event
 ]
 enchantments = [
   "stun",
@@ -1614,7 +1591,7 @@ description = "Caramel Boom is a New Year 2018 and 2019 special weapon in Shadow
 traits = [
   "nintendo_switch_edition",
   "ny18",
-  "ny19" # evidence needed
+  "ny19"  # evidence needed
 ]
 enchantments = [
   "poisoning",
@@ -1694,14 +1671,6 @@ enchantments = [
   "bleeding",
 ]
 
-[WEAPON_VAL17_SAI]
-name = "Vermeil Fangs"
-description = "Vermeil Fangs are a 2017 Valentine's Day special weapon in Shadow Fight 2. They were obtainable during the Valentine's Day 2017,2020,2021 and 2023 updates, as a first-place reward by defeating raid-bosses (Vortex, Fatum, Arkhos, or Hoaxen), or by purchasing the Casket of Fates and Ruby Treasure Chest. Vermeil Fangs are enchanted with Magic Recharge. In the Special Edition, they are available in the shop to be bought. For some reason, this weapon was removed in the original version of the game"
-traits = ["special_edition", "vd17", "deceased"]
-enchantments = [
-  "magic_recharge",
-]
-
 [WEAPON_VAL20_SAI]
 name = "Vermeil Fangs"
 description = "Vermeil Fangs are a 2017 Valentine's Day special weapon in Shadow Fight 2. They were obtainable during the Valentine's Day 2017,2020,2021 and 2023 updates, as a first-place reward by defeating raid-bosses (Vortex, Fatum, Arkhos, or Hoaxen), or by purchasing the Casket of Fates and Ruby Treasure Chest . Vermeil Fangs are enchanted with Magic Recharge. In the Special Edition, they are available in the shop to be bought."
@@ -1734,28 +1703,6 @@ enchantments = [
   "time_bomb",
 ]
 
-[WEAPON_VAL17_FANS]
-name = "Fans Of Passion"
-description = "Fans of Passion are a 2017 Valentine's Day special weapon in Shadow Fight 2. They were obtainable during the Valentine's Day 2017, 2020, 2021 and 2023 updates, as a first-place reward by defeating raid-bosses (Vortex, Fatum, Arkhos, or Hoaxen), or by purchasing the Casket of Fates and Ruby Treasure Chest. Fans of Passion are enchanted with Poisoning. In the Special Edition, they can be bought from the shop. For some reason, this weapon was removed in the original version of the game"
-traits = ["special_edition", "nintendo_switch_edition", "vd17", "deceased"]
-enchantments = [
-  "poisoning",
-]
-
-[WEAPON_VAL17_TRIDENT]
-name = "Fatemaker"
-description = "Fatemaker is a 2017 Valentine's Day special weapon in Shadow Fight 2. It was obtainable during the Valentine's Day 2017, 2020, 2021 and 2023 updates, as a first-place reward by defeating raid-bosses (Vortex, Fatum, Arkhos, or Hoaxen), or by purchasing the Casket of Fates and Ruby Treasure Chest. Fatemaker is enchanted with Enfeeble. In the Special Edition, it is available in the shop to be bought. For some reason, this weapon was removed in the original version of the game"
-traits = [
-  "special_edition",
-  "nintendo_switch_edition",
-  "vd17",
-  "deceased",
-]
-enchantments = [
-  "enfeeble",
-  "time_bomb",
-]
-
 [WEAPON_VAL20_FANS]
 name = "Fans Of Passion"
 description = "Fans of Passion are a 2017 Valentine's Day special weapon in Shadow Fight 2. They were obtainable during the Valentine's Day 2017, 2020, 2021 and 2023 updates, as a first-place reward by defeating raid-bosses (Vortex, Fatum, Arkhos, or Hoaxen), or by purchasing the Casket of Fates and Ruby Treasure Chest . Fans of Passion are enchanted with Poisoning. In the Special Edition, they can be bought from the shop."
@@ -1776,3 +1723,35 @@ traits = [
 enchantments = [
   "enfeeble",
 ]
+
+# Items added by DE
+
+[WEAPON_FANS]
+name = "Fans"
+traits = ["revived"]
+enchantments = ["bloodrage"]
+
+[WEAPON_KELT_AXES]
+name = "Kelt Axes"
+traits = ["revived"]
+enchantments = ["weakness"]
+
+[WEAPON_MOON_FANS]
+name = "Moon Fans"
+traits = ["revived"]
+enchantments = ["bloodrage"]
+
+[WEAPON_SUPER_AXES2]
+name = "Imhotep Axes"
+traits = ["revived"]
+enchantments = ["stun"]
+
+[WEAPON_SUPER_KNIVES]
+name = "Super Knives"
+traits = ["revived"]
+enchantments = ["precision"]
+
+[WEAPON_SUPER_POLEAXE]
+name = "Poleaxe"
+traits = ["revived"]
+enchantments = ["precision"]

@@ -1,21 +1,3 @@
-/* 
- * Stalker
- * Copyright (C) 2025 Andreno
- * 
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <https://www.gnu.org/licenses/>.
- */
-
 import 'package:flutter/material.dart';
 import 'package:signals/signals_flutter.dart';
 import 'package:url_launcher/url_launcher_string.dart';
@@ -53,15 +35,22 @@ class _AboutPageState extends State<AboutPage> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     const Text(
-                      "Stalker",
+                      "DETool64",
                       style: TextStyle(fontSize: 32),
                     ),
-                    const Text("© 2025 Andreno. All rights reserved."),
-                    const SizedBox(
-                      height: 40,
+                    const Divider(),
+                    Column(
+                      spacing: 0,
+                      children: [
+                        const Text("Fork of Stalker: ",
+                            style: TextStyle(
+                                fontSize: 20, fontWeight: FontWeight.bold)),
+                        _makeHyperlink("https://github.com/onerdna/stalker"),
+                      ],
                     ),
+                    const Divider(),
                     const Text(
-                        "This app allows you to view and, optionally, edit save files for the game Shadow Fight 2, owned by Nekki Limited. Editing is not recommended and is done at your own risk. As stated in the EULA, I am not responsible for any consequences resulting from such actions.",
+                        "This app allows you to view and, optionally, edit save files for the game Shadow Fight 2: Definitive Edition 64, fan-made mod made by seby. The original game is owned by Nekki Limited. Editing is not recommended and is done at your own risk. As stated in the EULA, I am not responsible for any consequences resulting from such actions.",
                         style: TextStyle(
                             fontSize: 16, fontWeight: FontWeight.bold)),
                     const Text("⚠️ Disclaimer",
@@ -86,31 +75,20 @@ class _AboutPageState extends State<AboutPage> {
                         ),
                       ],
                     ),
-                    Row(
-                      children: [
-                        const Text("GitHub: ",
-                            style: TextStyle(
-                                fontSize: 16, fontWeight: FontWeight.bold)),
-                        Expanded(
-                            child:
-                                _makeHyperlink("https://github.com/onerdna")),
-                      ],
-                    ),
                     const Divider(),
-                    const Text("Contributors",
-                        style: TextStyle(
-                            fontSize: 20, fontWeight: FontWeight.bold)),
-                    const Text("sametaor",
+                    const Text(
+                        "Shadow Fight 2: Definitive Edition 64 author: seby7113",
                         style: TextStyle(
                             fontSize: 16, fontWeight: FontWeight.bold)),
                     Row(
                       children: [
-                        const Text("GitHub: ",
+                        const Text("Reddit: ",
                             style: TextStyle(
                                 fontSize: 16, fontWeight: FontWeight.bold)),
-                        Flexible(
-                            child:
-                                _makeHyperlink("https://github.com/sametaor/")),
+                        Expanded(
+                          child: _makeHyperlink(
+                              "https://www.reddit.com/user/seby7113"),
+                        ),
                       ],
                     ),
                     const Divider(),

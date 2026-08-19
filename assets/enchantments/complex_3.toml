@@ -1,0 +1,22 @@
+[group]
+id = "complex_3"
+displayName = "Complex III"
+color = "0xFF441752"
+order = 4
+hasAspect = false
+
+[arcane_martial_arts]
+name = "Arcane Martial Arts"
+id = "PERK_ARCANE_MARTIAL_ART_SET_NEO_WANDERER"
+
+[cordyceps]
+name = "Cordyceps"
+id = "PERK_CORDYCEPS_FUNGUS_SET"
+
+[roaring_luminary]
+name = "Roaring Luminary"
+id = "PERK_MAGMA_VOLCANO_SET"
+
+[predators_fury]
+name = "Predator's Fury"
+id = "PERK_KARCER_HUNGER_SET"
