@@ -9,14 +9,24 @@ hasAspect = false
 name = "Rock"
 id = "PERK_ELIXIR_ROCK"
 
-[cordyceps]
-name = "Cordyceps"
-id = "PERK_CORDYCEPS_FUNGUS_SET"
+[Resistance]
+name = "Resistance"
+id = "PERK_ELIXIR_RESISTANCE"
 
-[roaring_luminary]
-name = "Roaring Luminary"
-id = "PERK_MAGMA_VOLCANO_SET"
+[Lifesteal_bomb]
+name = "Lifesteal bomb"
+id = "PERK_ELIXIR_TIME_BOMB"
 
-[predators_fury]
-name = "Predator's Fury"
-id = "PERK_KARCER_HUNGER_SET"
+[Regeneration]
+name = "Regeneration"
+id = "PERK_ELIXIR_REGENERATION"
+
+
+[Recharge]
+name = "Magic Recharge"
+id = "PERK_ELIXIR_MAGIC_PAIN_RECHARGE"
+
+
+[Dmg_return]
+name = "Damage Return"
+id = "PERK_ELIXIR_DMG_RETURN"
