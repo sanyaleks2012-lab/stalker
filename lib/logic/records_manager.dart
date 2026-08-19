@@ -33,7 +33,7 @@ class RecordsManager {
   static List<Record> records = [];
   static String userid = "";
   static const userdataPath =
-      "/sdcard/Android/data/com.nekki.shadowfight/files/userdata";
+      "/sdcard/Android/data/com.sf2.de/files/userdata";
 
   static Record? get activeRecord =>
       records.where((e) => e.metadata.isActive == true).firstOrNull;
