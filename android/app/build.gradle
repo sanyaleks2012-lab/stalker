@@ -5,7 +5,7 @@ plugins {
 }
 
 android {
-    namespace = "com.onerdna.stalker"
+    namespace = "com.onerdna.stalker.plus"
     compileSdk = 36
     ndkVersion = "29.0.14206865"
 
@@ -25,7 +25,7 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.onerdna.stalker"
+        applicationId = "com.onerdna.stalker.plus"
         minSdk = 26
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
