@@ -583,27 +583,3 @@ traits = [
 enchantments = [
   "precision",
 ]
-
-
-[RANGED_C3_z3]
-name = ""
-
-
-[RANGED_SUMMER21_DONUT]
-name = "Unbroken Donut"
-
-
-[RANGED_SUMMER21_SQUID]
-name = "Furious Squid"
-
-
-[RANGED_SUPER_CHAKRAM_JEWELS]
-name = "Jewel of the East"
-
-
-[RANGED_UNKNOWN]
-name = "Unknown Ranged Weapon"
-
-
-[RANGED_VAL17_AXE]
-name = "Broken Hearts"

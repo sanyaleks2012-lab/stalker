@@ -567,27 +567,3 @@ traits = [
 enchantments = [
   "bloodrage",
 ]
-
-[MAGIC_C3_z3]
-name = ""
-
-
-[MAGIC_DARK_WAVE]
-name = "Dark Wave"
-
-
-[MAGIC_GENTLE_STORM_26]
-name = "Tender Tempest"
-
-
-[MAGIC_RESURRECTED_25]
-name = "Inner Rebellion"
-
-
-[MAGIC_UNKNOWN]
-name = "Unknown Power"
-
-
-[TENEBRIS_MAGIC]
-name = "Medium Charge of Darkness"
-
