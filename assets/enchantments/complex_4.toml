@@ -1,0 +1,22 @@
+[group]
+id = "complex_4"
+displayName = "Complex Elix"
+color = "0xFF441752"
+order = 4
+hasAspect = false
+
+[elix_1]
+name = "Rock"
+id = "PERK_ELIXIR_ROCK"
+
+[cordyceps]
+name = "Cordyceps"
+id = "PERK_CORDYCEPS_FUNGUS_SET"
+
+[roaring_luminary]
+name = "Roaring Luminary"
+id = "PERK_MAGMA_VOLCANO_SET"
+
+[predators_fury]
+name = "Predator's Fury"
+id = "PERK_KARCER_HUNGER_SET"
