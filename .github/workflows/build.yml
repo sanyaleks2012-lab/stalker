@@ -1,4 +1,4 @@
-gname: Build Stalker APK
+name: Build Stalker APK
 
 on:
   workflow_dispatch: # Запуск вручную по кнопке
