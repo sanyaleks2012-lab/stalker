@@ -1,6 +1,6 @@
 [group]
-id = "special_3"
-displayName = "Special III"
+id = "special_4"
+displayName = "Elixir's"
 color = "0xFAE251AA"
 order = 7
 hasAspect = false
