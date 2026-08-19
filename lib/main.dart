@@ -109,7 +109,7 @@ class _RootAppState extends State<RootApp> {
               theme: lightTheme,
               darkTheme: darkTheme,
               themeMode: brightness_,
-              title: "Stalker",
+              title: "Stalker++",
               home: const App());
         });
       },

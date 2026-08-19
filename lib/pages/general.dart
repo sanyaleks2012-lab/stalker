@@ -41,6 +41,7 @@ class Field {
 }
 
 class _GeneralPageState extends State<GeneralPage> {
+  late final List<Field> identity;
   late final List<Field> currencies;
   late final List<Field> progression;
   late final List<List<Field>> sections;
@@ -48,6 +49,46 @@ class _GeneralPageState extends State<GeneralPage> {
   @override
   void initState() {
     super.initState();
+
+    identity = [
+      Field(
+        "assets/images/shuriken.png",
+        "First Name",
+        TextEditingController(
+            text: RecordsManager.activeRecord!.firstName ?? ""),
+        (value) {
+          RecordsManager.activeRecord!.firstName = value;
+        },
+      ),
+      Field(
+        "assets/images/shuriken.png",
+        "Avatar",
+        TextEditingController(
+            text: RecordsManager.activeRecord!.avatar ?? ""),
+        (value) {
+          RecordsManager.activeRecord!.avatar = value;
+        },
+      ),
+      Field(
+        "assets/images/shuriken.png",
+        "Voice",
+        TextEditingController(
+            text: RecordsManager.activeRecord!.voice ?? ""),
+        (value) {
+          RecordsManager.activeRecord!.voice = value;
+        },
+      ),
+      Field(
+        "assets/images/dojo.png",
+        "Dojo Loader",
+        TextEditingController(
+            text: RecordsManager.activeRecord!.dojoLoader ?? ""),
+        (value) {
+          RecordsManager.activeRecord!.dojoLoader = value;
+        },
+      ),
+    ];
+
     currencies = [
       Field(
           "assets/images/coin.png",
@@ -68,7 +109,7 @@ class _GeneralPageState extends State<GeneralPage> {
                   .toString()), (value) {
         RecordsManager.activeRecord!
             .setCurrency(Currency.gems, int.tryParse(value) ?? 0);
-      }, tooltip: "Setting a value higher that 999 999 999 is not recommended"),
+      }, tooltip: "Setting a value higher than 999 999 999 is not recommended"),
       Field(
           "assets/images/forge_green.png",
           "Green orbs",
@@ -78,7 +119,7 @@ class _GeneralPageState extends State<GeneralPage> {
                   .toString()), (value) {
         RecordsManager.activeRecord!
             .setCurrency(Currency.greenOrbs, int.tryParse(value) ?? 0);
-      }, tooltip: "Setting a value higher that 999 999 999 is not recommended"),
+      }, tooltip: "Setting a value higher than 999 999 999 is not recommended"),
       Field(
           "assets/images/forge_red.png",
           "Red orbs",
@@ -88,7 +129,7 @@ class _GeneralPageState extends State<GeneralPage> {
                   .toString()), (value) {
         RecordsManager.activeRecord!
             .setCurrency(Currency.redOrbs, int.tryParse(value) ?? 0);
-      }, tooltip: "Setting a value higher that 999 999 999 is not recommended"),
+      }, tooltip: "Setting a value higher than 999 999 999 is not recommended"),
       Field(
           "assets/images/forge_purple.png",
           "Purple orbs",
@@ -98,7 +139,7 @@ class _GeneralPageState extends State<GeneralPage> {
                   .toString()), (value) {
         RecordsManager.activeRecord!
             .setCurrency(Currency.purpleOrbs, int.tryParse(value) ?? 0);
-      }, tooltip: "Setting a value higher that 999 999 999 is not recommended"),
+      }, tooltip: "Setting a value higher than 999 999 999 is not recommended"),
     ];
 
     progression = [
@@ -119,7 +160,17 @@ class _GeneralPageState extends State<GeneralPage> {
       })
     ];
 
-    sections = [currencies, progression];
+    sections = [identity, currencies, progression];
+  }
+
+  @override
+  void dispose() {
+    for (var section in sections) {
+      for (var field in section) {
+        field.controller.dispose();
+      }
+    }
+    super.dispose();
   }
 
   Row _generateCheckbox(String name, String imagePath, bool value,
@@ -198,7 +249,13 @@ class _GeneralPageState extends State<GeneralPage> {
 
   @override
   Widget build(BuildContext context) {
-    final sections = [
+    final uiSections = [
+      _generateSection(
+          "Identity",
+          const Icon(Icons.person, color: Colors.blueAccent, size: 24),
+          "Name, Avatar, Voice and Dojo Loader settings",
+          identity,
+          initiallyExpanded: true),
       _generateSection(
           "Currencies",
           Image.asset(
@@ -207,8 +264,7 @@ class _GeneralPageState extends State<GeneralPage> {
             height: 24,
           ),
           "Coins, Gems and Forge Materials",
-          currencies,
-          initiallyExpanded: true),
+          currencies),
       _generateSection(
           "Progression",
           const Icon(Icons.arrow_upward, color: Colors.lightGreen, size: 24),
@@ -227,12 +283,12 @@ class _GeneralPageState extends State<GeneralPage> {
               itemBuilder: (context, index) {
                 final borderRadius = BorderRadius.vertical(
                     top: Radius.circular(index == 0 ? 24 : 4),
-                    bottom:
-                        Radius.circular(index == sections.length - 1 ? 24 : 4));
+                    bottom: Radius.circular(
+                        index == uiSections.length - 1 ? 24 : 4));
                 return ClipRRect(
-                    borderRadius: borderRadius, child: sections[index]);
+                    borderRadius: borderRadius, child: uiSections[index]);
               },
-              itemCount: sections.length,
+              itemCount: uiSections.length,
             ),
             const SizedBox(height: 20),
             _generateCheckbox("Dojo Disciple", "assets/images/dojo.png",

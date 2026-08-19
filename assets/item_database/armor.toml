@@ -1048,3 +1048,39 @@ traits = [
 enchantments = [
   "shielding",
 ]
+
+[ARMOR_C3_z3]
+name = ""
+
+
+[ARMOR_CHNY20_TRADITIONAL]
+name = "Dragon"
+
+
+[ARMOR_DEPTH_OF_HOLINESS_26]
+name = "Depths of Sanctity"
+
+
+[ARMOR_TRIBAL_HW_24]
+name = "Mist Lord"
+
+
+[ARMOR_UNKNOWN]
+name = "Unknown Armor"
+
+
+[ARMOR_VAL17_MANTLE]
+name = "Poetic Mantle"
+
+
+[ARMOR_XMAS16_SANTA]
+name = "Winter Breath Jacket"
+
+
+[BERSTUUK_BODY]
+name = "Berstuuk"
+
+
+[BODY_CANDY]
+name = "Candy"
+

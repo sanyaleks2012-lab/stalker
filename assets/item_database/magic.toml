@@ -439,6 +439,13 @@ traits = [
   "unobtainable",
 ]
 
+[MAGIC_MIND_THROW_NORMAL]
+name = "Mind Throw Shadow"
+description = "Shadow forms a blue energy orb in his hand, then sends another towards the player while holding the original. On impact, Enemy is choked and becomes immobile. Titan then uses the orb to lift Shadow, hold him slightly and slam him back onto the ground."
+traits = [
+  "unobtainable",
+]
+
 [MAGIC_DARK_WAVE]
 name = "Dark Wave"
 description = "Magic that looks like Force Wave, but is black in color instead of white. The magic then became available to the player as Sloe Thorn. Used by Fatum, Karcer, The Blackness, Morgana, Banshee, Puppeteer, Faradeya and Ninja."
@@ -560,3 +567,27 @@ traits = [
 enchantments = [
   "bloodrage",
 ]
+
+[MAGIC_C3_z3]
+name = ""
+
+
+[MAGIC_DARK_WAVE]
+name = "Dark Wave"
+
+
+[MAGIC_GENTLE_STORM_26]
+name = "Tender Tempest"
+
+
+[MAGIC_RESURRECTED_25]
+name = "Inner Rebellion"
+
+
+[MAGIC_UNKNOWN]
+name = "Unknown Power"
+
+
+[TENEBRIS_MAGIC]
+name = "Medium Charge of Darkness"
+

@@ -1193,3 +1193,50 @@ traits = [
 enchantments = [
   "critical_protection",
 ]
+
+[BERSTUUK_HEAD]
+name = "Berstuuk"
+
+
+[HEAD_ARKXEN]
+name = "Arkxen"
+
+
+[HEAD_C3_z3]
+name = ""
+
+
+[HEAD_CANDY]
+name = "Candy"
+
+
+[HEAD_FEAR]
+name = "Tenebris"
+
+
+[HELM_C3_z3]
+name = ""
+
+
+[HELM_CHNY20_TRADITIONAL]
+name = "Hat of Generous Gifts"
+
+
+[HELM_CROWN_OF_DESPAIR_26]
+name = "Diadem of Despair"
+
+
+[HELM_RAID_SUMMER_FEST_26]
+name = "Rh1thm"
+
+
+[HELM_SUMMER21_SANTA]
+name = "Unyielding Face of Winter"
+
+
+[HELM_UNKNOWN]
+name = "Unknown Helm"
+
+
+[HELM_VAL17_WINGS]
+name = "Helm of Inspiration"

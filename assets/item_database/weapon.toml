@@ -1196,7 +1196,7 @@ traits = [
 ]
 
 [WEAPON_GIANT_SWORD]
-name = "Desolator"
+name = "Giant Sword"
 description = "A weapon that appears to be a smaller version of Titan's Desolator. It has a white blade and black handles instead of metallic navy blue like Titan's. In the 2018 New Year's dojo, a Desolator wrapped in a purple ribbon can be seen on the left."
 traits = ["unobtainable", "deceased"]
 
