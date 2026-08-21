@@ -115,7 +115,7 @@ class _EquipmentPageState extends State<EquipmentPage> {
           crossAxisCount: 3,
           mainAxisSpacing: 8,
           crossAxisSpacing: 8,
-          childAspectRatio: 0.72, // Уменьшили значение, чтобы дать больше высоты под текст
+          childAspectRatio: 0.80, // Уменьшили значение, чтобы дать больше высоты под текст
         ),
         itemCount: gridItems.length,
         itemBuilder: (context, index) {
@@ -140,10 +140,10 @@ class _EquipmentPageState extends State<EquipmentPage> {
                     ),
                   ),
                   onPressed: onTap,
-                  child: Image.asset(imagePath, width: 56, height: 56), // Уменьшили с 64 до 56
+                  child: Image.asset(imagePath, width: 64, height: 64), // Уменьшили с 64 до 56
                 ),
               ),
-              const SizedBox(height: 6),
+              const SizedBox(height: 4),
               Flexible(
                 child: Text(
                   label,
@@ -152,7 +152,7 @@ class _EquipmentPageState extends State<EquipmentPage> {
                   overflow: TextOverflow.ellipsis,
                   style: const TextStyle(
                     fontWeight: FontWeight.bold,
-                    fontSize: 13, // Уменьшили с 16 до 13 для хорошей читаемости
+                    fontSize: 15, // Уменьшили с 16 до 13 для хорошей читаемости
                   ),
                 ),
               ),

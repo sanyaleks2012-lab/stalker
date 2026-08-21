@@ -50,7 +50,7 @@ class _GeneralPageState extends State<GeneralPage> {
                   .toString()), (value) {
         RecordsManager.activeRecord!
             .setCurrency(Currency.gems, int.tryParse(value) ?? 0);
-      }, tooltip: "Setting a value higher that 999 999 999 is not recommended"),
+      }),
       Field(
           "assets/images/forge_green.png",
           "Green orbs",
@@ -60,7 +60,7 @@ class _GeneralPageState extends State<GeneralPage> {
                   .toString()), (value) {
         RecordsManager.activeRecord!
             .setCurrency(Currency.greenOrbs, int.tryParse(value) ?? 0);
-      }, tooltip: "Setting a value higher that 999 999 999 is not recommended"),
+      }),
       Field(
           "assets/images/forge_red.png",
           "Red orbs",
@@ -70,7 +70,7 @@ class _GeneralPageState extends State<GeneralPage> {
                   .toString()), (value) {
         RecordsManager.activeRecord!
             .setCurrency(Currency.redOrbs, int.tryParse(value) ?? 0);
-      }, tooltip: "Setting a value higher that 999 999 999 is not recommended"),
+      }),
       Field(
           "assets/images/forge_purple.png",
           "Purple orbs",
@@ -80,7 +80,7 @@ class _GeneralPageState extends State<GeneralPage> {
                   .toString()), (value) {
         RecordsManager.activeRecord!
             .setCurrency(Currency.purpleOrbs, int.tryParse(value) ?? 0);
-      }, tooltip: "Setting a value higher that 999 999 999 is not recommended"),
+      }),
     ];
 
     progression = [
@@ -111,6 +111,7 @@ class _GeneralPageState extends State<GeneralPage> {
         Image.asset(imagePath, width: 40, height: 40),
         const SizedBox(width: 20),
         Text(name),
+        const Spacer(),
         Checkbox(value: value, onChanged: onChanged)
       ],
     );
@@ -131,7 +132,7 @@ class _GeneralPageState extends State<GeneralPage> {
             padding: const EdgeInsets.only(left: 32.0),
             child: Text(description),
           ),
-          childrenPadding: const EdgeInsets.only(left: 32),
+          childrenPadding: const EdgeInsets.only(left: 16, right: 16, bottom: 8),
           collapsedShape: const RoundedRectangleBorder(
             side: BorderSide(color: Colors.transparent, width: 0),
           ),
@@ -139,40 +140,35 @@ class _GeneralPageState extends State<GeneralPage> {
             side: BorderSide(color: Colors.transparent, width: 0),
           ),
           children: fields.map((field) {
-            return Row(
-              children: [
-                Image.asset(field.iconPath, width: 24, height: 24),
-                const SizedBox(width: 5),
-                Text(field.name),
-                const SizedBox(width: 10),
-                SizedBox(
-                  height: 50,
-                  width: 150,
-                  child: TextField(
-                    controller: field.controller,
-                    decoration: const InputDecoration(
-                      contentPadding: EdgeInsets.only(top: 16, bottom: 0),
-                      border: UnderlineInputBorder(),
-                      isDense: true,
+            return Padding(
+              padding: const EdgeInsets.symmetric(vertical: 4.0),
+              child: Row(
+                children: [
+                  Image.asset(field.iconPath, width: 24, height: 24),
+                  const SizedBox(width: 8),
+                  SizedBox(
+                    width: 95,
+                    child: Text(
+                      field.name,
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ),
-                ),
-                if (field.tooltip != null) ...[
-                  const Spacer(),
-                  Padding(
-                    padding: const EdgeInsets.only(right: 16.0),
-                    child: ClickTooltip(
-                      message: field.tooltip,
-                      decoration: BoxDecoration(
-                          border: Border.all(width: 1),
-                          borderRadius: BorderRadius.circular(16),
-                          color: Theme.of(context).canvasColor),
-                      textStyle: Theme.of(context).textTheme.bodyMedium,
-                      child: const Icon(Icons.info_outline),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: SizedBox(
+                      height: 40,
+                      child: TextField(
+                        controller: field.controller,
+                        decoration: const InputDecoration(
+                          contentPadding: EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+                          border: UnderlineInputBorder(),
+                          isDense: true,
+                        ),
+                      ),
                     ),
-                  )
-                ]
-              ],
+                  ),
+                ],
+              ),
             );
           }).toList()),
     );

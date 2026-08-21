@@ -87,7 +87,7 @@ class _RecordsPageState extends State<RecordsPage> {
                       child: Padding(
                         padding: EdgeInsets.only(top: 8.0),
                         child: Text(
-                          "✓",
+                          "Active",
                           style: TextStyle(
                               fontSize: 12, fontWeight: FontWeight.bold),
                         ),
