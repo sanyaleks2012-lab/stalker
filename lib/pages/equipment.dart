@@ -161,3 +161,5 @@ class _EquipmentPageState extends State<EquipmentPage> {
         },
       ),
     );
+   } // Закрывает метод build
+}  
