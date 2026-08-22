@@ -232,7 +232,10 @@ class _GeneralPageState extends State<GeneralPage> {
               setState(() {
                 RecordsManager.activeRecord!.showForge = value ?? false;
               });
-            })
+            }),
+            
+            // ДОБАВЛЯЕМ ОТСТУП СНИЗУ ПОД КНОПКУ SAVE
+            const SizedBox(height: 80), 
           ]),
         ),
       ),
