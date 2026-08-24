@@ -51,7 +51,8 @@ android {
 
     buildTypes {
         release {
-            signingConfig = signingConfigs.release
+            // Подписываем релизный билд дефолтным debug ключом, если нет key.properties
+            signingConfig = keystorePropertiesFile.exists() ? signingConfigs.release : signingConfigs.debug
         }
     }
 
@@ -68,4 +69,3 @@ dependencies {
     implementation "dev.rikka.shizuku:api:$shizuku_version"
     implementation "dev.rikka.shizuku:provider:$shizuku_version"
 }
-
