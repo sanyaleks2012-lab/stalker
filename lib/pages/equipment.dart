@@ -109,57 +109,48 @@ class _EquipmentPageState extends State<EquipmentPage> {
       ),
     ];
     return Scaffold(
-      body: GridView.builder(
-        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        body: GridView.builder(
+      padding: EdgeInsets.zero,
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 3,
-          mainAxisSpacing: 8,
+          mainAxisSpacing: 0,
           crossAxisSpacing: 8,
-          childAspectRatio: 0.80, // Уменьшили значение, чтобы дать больше высоты под текст
-        ),
-        itemCount: gridItems.length,
-        itemBuilder: (context, index) {
-          final (label, imagePath, onTap) = gridItems[index];
-          return Column(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Container(
-                decoration: BoxDecoration(
-                  color: Theme.of(context)
-                      .colorScheme
-                      .surfaceTint
-                      .withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                child: TextButton(
-                  style: TextButton.styleFrom(
-                    padding: const EdgeInsets.all(8), // Уменьшили с 12 до 8
-                    shape: const ContinuousRectangleBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(24)),
-                    ),
-                  ),
-                  onPressed: onTap,
-                  child: Image.asset(imagePath, width: 64, height: 64), // Уменьшили с 64 до 56
-                ),
+          childAspectRatio: 0.88),
+      itemCount: gridItems.length,
+      itemBuilder: (context, index) {
+        final (label, imagePath, onTap) = gridItems[index];
+        return Column(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              decoration: BoxDecoration(
+                color: Theme.of(context)
+                    .colorScheme
+                    .surfaceTint
+                    .withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(16),
               ),
-              const SizedBox(height: 4),
-              Flexible(
-                child: Text(
-                  label,
-                  textAlign: TextAlign.center,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 15, // Уменьшили с 16 до 13 для хорошей читаемости
+              child: TextButton(
+                style: TextButton.styleFrom(
+                  padding: const EdgeInsets.all(12),
+                  shape: const ContinuousRectangleBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(24)),
                   ),
                 ),
+                onPressed: onTap,
+                child: Image.asset(imagePath, width: 64, height: 64),
               ),
-            ],
-          );
-        },
-      ),
-    );
-   } // Закрывает метод build
-}  
+            ),
+            const SizedBox(height: 8),
+            Text(
+              label,
+              textAlign: TextAlign.center,
+              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+            ),
+          ],
+        );
+      },
+    ));
+  }
+}

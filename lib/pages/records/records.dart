@@ -87,7 +87,7 @@ class _RecordsPageState extends State<RecordsPage> {
                       child: Padding(
                         padding: EdgeInsets.only(top: 8.0),
                         child: Text(
-                          "On",
+                          "Active",
                           style: TextStyle(
                               fontSize: 12, fontWeight: FontWeight.bold),
                         ),
@@ -96,24 +96,14 @@ class _RecordsPageState extends State<RecordsPage> {
                   : const Text(""),
             ],
           ),
-           subtitle: Align(
-            alignment: Alignment.centerLeft,
-            child: TextButton(
-              style: TextButton.styleFrom(
-                padding: EdgeInsets.zero,
-                minimumSize: Size.zero,
-                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-              ),
-              child: Text(
-                record.metadata.uuid,
-                style: const TextStyle(fontSize: 13.8),
-                overflow: TextOverflow.ellipsis,
-                maxLines: 1,
-              ),
-              onPressed: () {
-                Clipboard.setData(ClipboardData(text: record.metadata.uuid));
-              },
+          subtitle: TextButton(
+            child: Text(
+              record.metadata.uuid,
+              style: const TextStyle(fontSize: 13.8),
             ),
+            onPressed: () {
+              Clipboard.setData(ClipboardData(text: record.metadata.uuid));
+            },
           ),
           children: [
             Divider(
