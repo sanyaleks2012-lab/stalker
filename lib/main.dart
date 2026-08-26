@@ -85,7 +85,7 @@ class _RootAppState extends State<RootApp> {
       logger.i("Loaded enchantments from /sdcard/AddNew");
       _logDemonEvent();
     } catch (e, stack) {
-      logger.e("Failed to initialize app data: $e", stack);
+      logger.e("Failed to initialize app data: $e\n$stack");
     }
   }
 
