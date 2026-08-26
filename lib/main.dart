@@ -52,7 +52,6 @@ class _RootAppState extends State<RootApp> {
 
   static final Random _random = Random();
 
-  /// Выводит сообщение с демоном с шансом 15%
   void _logDemonEvent() {
     if (_random.nextDouble() < 0.15) {
       final demon = demons[_random.nextInt(demons.length)];
@@ -68,12 +67,10 @@ class _RootAppState extends State<RootApp> {
   }
 
   Future<void> _initializeApp() async {
-    // 1. Проверяем и запрашиваем доступ к ФС (MANAGE_EXTERNAL_STORAGE)
     if (await Permission.manageExternalStorage.isDenied) {
       await Permission.manageExternalStorage.request();
     }
 
-    // 2. Инициализируем базы и выводим логи
     try {
       await ItemDatabase.load();
       logger.i("Loaded item database");
@@ -88,7 +85,7 @@ class _RootAppState extends State<RootApp> {
       logger.i("Loaded enchantments from /sdcard/AddNew");
       _logDemonEvent();
     } catch (e, stack) {
-      logger.e("Failed to initialize app data", error: e, stackTrace: stack);
+      logger.e("Failed to initialize app data: $e", stackTrace: stack);
     }
   }
 
