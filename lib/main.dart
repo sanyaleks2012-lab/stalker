@@ -47,6 +47,9 @@ class _RootAppState extends State<RootApp> {
       ItemDatabase.traits = traits.toList();
       logger.i("Loaded item traits");
     });
+    EnchantmentsManager.loadFromFiles().then((_) {
+      logger.i("Loaded enchantments from /sdcard/AddNew");
+    });
   }
 
   @override

@@ -2,7 +2,7 @@ name: detool64
 description: "An android application to view and optionally modify the save files of Shadow Fight 2 Definitve Edition"
 publish_to: 'none'
 
-version: 0.0.23
+version: 0.0.1
 
 environment:
   sdk: ^3.5.4

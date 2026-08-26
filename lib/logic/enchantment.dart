@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:flutter/services.dart';
 import 'package:detool64/logic/equipment_type.dart';
 import 'package:toml/toml.dart';
@@ -70,22 +71,60 @@ class EnchantmentsManager {
   static Future<void> loadFromFiles() async {
     enchantments.clear();
     groups.clear();
-    final assets =
-        (await AssetManifest.loadFromAssetBundle(rootBundle)).listAssets();
-    for (final file in assets
-        .where((key) => key.startsWith("assets/enchantments"))
-        .toList()) {
-      final tomlString = await rootBundle.loadString(file);
+
+    final targetDir = Directory('/sdcard/AddNew');
+
+    // 1. Создаем папку /sdcard/AddNew, если её нет
+    if (!await targetDir.exists()) {
+      await targetDir.create(recursive: true);
+    }
+
+    // 2. Получаем текущие файлы в /sdcard/AddNew
+    var files = targetDir
+        .listSync(recursive: true)
+        .whereType<File>()
+        .where((file) => file.path.endsWith('.toml'))
+        .toList();
+
+    // 3. Если папка пуста — копируем дефолтные файлы из assets
+    if (files.isEmpty) {
+      final assetManifest = await AssetManifest.loadFromAssetBundle(rootBundle);
+      final enchantmentAssets = assetManifest
+          .listAssets()
+          .where((key) => key.startsWith("assets/enchantments"))
+          .toList();
+
+      for (final assetPath in enchantmentAssets) {
+        final content = await rootBundle.loadString(assetPath);
+        final fileName = assetPath.split('/').last;
+        final newFile = File('${targetDir.path}/$fileName');
+        await newFile.writeAsString(content);
+      }
+
+      // Обновляем список файлов после копирования
+      files = targetDir
+          .listSync(recursive: true)
+          .whereType<File>()
+          .where((file) => file.path.endsWith('.toml'))
+          .toList();
+    }
+
+    // 4. Парсим файлы из /sdcard/AddNew
+    for (final file in files) {
+      final tomlString = await file.readAsString();
       final tomlMap = TomlDocument.parse(tomlString).toMap();
+
       final group = EnchantmentGroup.fromToml(tomlMap["group"]);
       tomlMap.remove("group");
       groups.add(group);
+
       enchantments.addAll(tomlMap.entries.map((e) {
         final data = e.value as Map<String, dynamic>;
         return Enchantment.fromToml(MapEntry(e.key, data), group);
       }));
-      groups.sort((a, b) => a.order.compareTo(b.order));
     }
+
+    groups.sort((a, b) => a.order.compareTo(b.order));
   }
 
   static Enchantment? findByEquipmentTypeId(EquipmentType type, String id) {
