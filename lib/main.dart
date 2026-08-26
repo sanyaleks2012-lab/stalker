@@ -5,6 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:signals/signals_flutter.dart';
 import 'package:detool64/app.dart';
 import 'package:detool64/logic/item_database.dart';
+import 'package:detool64/logic/enchantments_manager.dart'; // <-- Добавлен импорт
 import 'package:detool64/themes.dart';
 
 Logs constructLogger() {
