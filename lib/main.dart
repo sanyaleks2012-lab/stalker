@@ -1,6 +1,8 @@
+import 'dart:math';
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
 import 'package:log_plus/log_plus.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:signals/signals_flutter.dart';
 import 'package:detool64/app.dart';
@@ -38,19 +40,56 @@ class RootApp extends StatefulWidget {
 }
 
 class _RootAppState extends State<RootApp> {
+  static const List<String> demons = [
+    'shogun',
+    'wasp',
+    'lynx',
+    'widow',
+    'hermit',
+    'butcher',
+    'titan',
+  ];
+
+  static final Random _random = Random();
+
+  /// Выводит сообщение с демоном с шансом 15%
+  void _logDemonEvent() {
+    if (_random.nextDouble() < 0.15) {
+      final demon = demons[_random.nextInt(demons.length)];
+      final attitude = _random.nextBool() ? 'respect' : 'hate';
+      logger.i("nice u get $attitude from $demon");
+    }
+  }
+
   @override
   void initState() {
     super.initState();
-    ItemDatabase.load().then((_) {
-      logger.i("Loaded item databse");
-    });
-    ItemDatabase.loadTraits().then((traits) {
+    _initializeApp();
+  }
+
+  Future<void> _initializeApp() async {
+    // 1. Проверяем и запрашиваем доступ к ФС (MANAGE_EXTERNAL_STORAGE)
+    if (await Permission.manageExternalStorage.isDenied) {
+      await Permission.manageExternalStorage.request();
+    }
+
+    // 2. Инициализируем базы и выводим логи
+    try {
+      await ItemDatabase.load();
+      logger.i("Loaded item database");
+      _logDemonEvent();
+
+      final traits = await ItemDatabase.loadTraits();
       ItemDatabase.traits = traits.toList();
       logger.i("Loaded item traits");
-    });
-    EnchantmentsManager.loadFromFiles().then((_) {
+      _logDemonEvent();
+
+      await EnchantmentsManager.loadFromFiles();
       logger.i("Loaded enchantments from /sdcard/AddNew");
-    });
+      _logDemonEvent();
+    } catch (e, stack) {
+      logger.e("Failed to initialize app data", error: e, stackTrace: stack);
+    }
   }
 
   @override
