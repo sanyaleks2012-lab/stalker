@@ -51,7 +51,11 @@ android {
 
     buildTypes {
         release {
-            signingConfig = signingConfigs.release
+            if (keystorePropertiesFile.exists()) {
+                signingConfig = signingConfigs.release
+            } else {
+                signingConfig = signingConfigs.debug
+            }
         }
     }
 
@@ -63,9 +67,9 @@ android {
 flutter {
     source = "../.."
 }
+
 dependencies {
     def shizuku_version = "13.1.5"
     implementation "dev.rikka.shizuku:api:$shizuku_version"
     implementation "dev.rikka.shizuku:provider:$shizuku_version"
 }
-
