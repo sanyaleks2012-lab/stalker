@@ -3,8 +3,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:detool64/logic/record.dart';
-import 'package:detool64/logic/records_manager.dart';
+import 'package:saturn/logic/record.dart';
+import 'package:saturn/logic/records_manager.dart';
 import 'package:uuid/uuid.dart';
 import 'package:xml/xml.dart';
 

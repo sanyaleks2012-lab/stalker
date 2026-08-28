@@ -1,4 +1,4 @@
-import 'package:detool64/logic/item_database.dart';
+import 'package:saturn/logic/item_database.dart';
 
 enum EquipmentType { weapon, ranged, magic, armor, helm }
 

@@ -11,7 +11,7 @@ if (keystorePropertiesFile.exists()) {
 }
 
 android {
-    namespace = "com.onerdna.detool64"
+    namespace = "com.onerdna.saturn"
     compileSdk = 36
     ndkVersion = "29.0.14206865"
 
@@ -31,7 +31,7 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.onerdna.detool64"
+        applicationId = "com.onerdna.saturn"
         minSdk = 26
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode

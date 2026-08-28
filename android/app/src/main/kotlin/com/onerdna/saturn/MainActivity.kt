@@ -1,4 +1,4 @@
-package com.onerdna.detool64
+package com.onerdna.saturn
 
 import android.content.ComponentName
 import android.content.ServiceConnection
@@ -15,7 +15,7 @@ import rikka.shizuku.Shizuku.UserServiceArgs
 
 class MainActivity : FlutterActivity() {
     @Keep
-    private val shizukuChannel = "com.onerdna.detool64/shizuku"
+    private val shizukuChannel = "com.onerdna.saturn/shizuku"
     @Keep
     private var binderService: IBinderService? = null
 

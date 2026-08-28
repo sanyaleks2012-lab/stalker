@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:detool64/ui/click_tooltip.dart';
-import 'package:detool64/logic/enchantment.dart';
-import 'package:detool64/logic/equipment_type.dart';
+import 'package:saturn/ui/click_tooltip.dart';
+import 'package:saturn/logic/enchantment.dart';
+import 'package:saturn/logic/equipment_type.dart';
 
 class NewEnchantmentDialog extends StatefulWidget {
   final List<Enchantment> enchantments;

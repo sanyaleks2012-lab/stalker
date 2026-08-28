@@ -2,10 +2,10 @@ import 'dart:io';
 
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:detool64/logic/record.dart';
-import 'package:detool64/main.dart';
-import 'package:detool64/shizuku_api.dart';
-import 'package:detool64/shizuku_file.dart';
+import 'package:saturn/logic/record.dart';
+import 'package:saturn/main.dart';
+import 'package:saturn/shizuku_api.dart';
+import 'package:saturn/shizuku_file.dart';
 import 'package:toml/toml.dart';
 import 'package:xml/xml.dart';
 

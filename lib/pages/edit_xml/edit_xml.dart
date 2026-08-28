@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:detool64/pages/edit_xml/text_search_bar.dart';
-import 'package:detool64/logic/record.dart';
-import 'package:detool64/logic/records_manager.dart';
+import 'package:saturn/pages/edit_xml/text_search_bar.dart';
+import 'package:saturn/logic/record.dart';
+import 'package:saturn/logic/records_manager.dart';
 import 'package:xml/xml.dart';
 
 class EditXmlPage extends StatefulWidget {

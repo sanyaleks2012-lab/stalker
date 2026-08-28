@@ -11,20 +11,20 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:signals/signals_flutter.dart';
-import 'package:detool64/repo.dart';
-import 'package:detool64/pages/debug.dart';
-import 'package:detool64/ui/app_bar.dart';
-import 'package:detool64/logic/enchantment.dart';
-import 'package:detool64/main.dart';
-import 'package:detool64/pages/edit_xml/edit_xml.dart';
-import 'package:detool64/pages/equipment.dart';
-import 'package:detool64/pages/general.dart';
-import 'package:detool64/pages/records/records.dart';
-import 'package:detool64/logic/record.dart';
-import 'package:detool64/logic/records_manager.dart';
+import 'package:saturn/repo.dart';
+import 'package:saturn/pages/debug.dart';
+import 'package:saturn/ui/app_bar.dart';
+import 'package:saturn/logic/enchantment.dart';
+import 'package:saturn/main.dart';
+import 'package:saturn/pages/edit_xml/edit_xml.dart';
+import 'package:saturn/pages/equipment.dart';
+import 'package:saturn/pages/general.dart';
+import 'package:saturn/pages/records/records.dart';
+import 'package:saturn/logic/record.dart';
+import 'package:saturn/logic/records_manager.dart';
 import 'package:signals/signals.dart' as signals_core;
-import 'package:detool64/shizuku_api.dart';
-import 'package:detool64/shizuku_file.dart';
+import 'package:saturn/shizuku_api.dart';
+import 'package:saturn/shizuku_file.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 import 'package:uuid/uuid.dart';
 import 'package:xml/xml.dart';
@@ -311,9 +311,9 @@ import 'package:flutter/material.dart';
 import 'package:log_plus/log_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:signals/signals_flutter.dart';
-import 'package:detool64/app.dart';
-import 'package:detool64/logic/item_database.dart';
-import 'package:detool64/themes.dart';
+import 'package:saturn/app.dart';
+import 'package:saturn/logic/item_database.dart';
+import 'package:saturn/themes.dart';
 
 Logs constructLogger() {
   return logger = Logs(
@@ -397,7 +397,7 @@ class _RootAppState extends State<RootApp> {
               theme: lightTheme,
               darkTheme: darkTheme,
               themeMode: brightness_,
-              title: "DETool64",
+              title: "Saturn",
               home: const App());
         });
       },
@@ -412,10 +412,10 @@ class _RootAppState extends State<RootApp> {
 <document_content>
 class Repo {
   static const String repoUser = "onerdna";
-  static const String repoName = "detool64";
+  static const String repoName = "saturn";
   static const String repoUrl = "https://codeberg.org/$repoUser/$repoName";
   static const String latestRelease = "$repoUrl/releases/latest";
-  static const String issueGeneral = "https://codeberg.org/onerdna/detool64/issues/new";
+  static const String issueGeneral = "https://codeberg.org/onerdna/saturn/issues/new";
 }
 
 </document_content>
@@ -426,7 +426,7 @@ class Repo {
 import 'package:flutter/services.dart';
 
 class BridgeApi {
-  static const _channel = MethodChannel('com.onerdna.detool64/shizuku');
+  static const _channel = MethodChannel('com.onerdna.saturn/shizuku');
 
   static Future<bool?> pingBinder() async {
     return await _channel.invokeMethod("pingBinder");
@@ -464,7 +464,7 @@ import 'dart:io';
 import 'dart:math';
 
 import 'package:path_provider/path_provider.dart';
-import 'package:detool64/shizuku_api.dart';
+import 'package:saturn/shizuku_api.dart';
 
 Future<String> readFile(String path) async {
   final Directory directory = (await getExternalStorageDirectory())!;
@@ -582,7 +582,7 @@ void setUseSystemColors(bool value) async {
 <source>lib/logic/enchantment.dart</source>
 <document_content>
 import 'package:flutter/services.dart';
-import 'package:detool64/logic/equipment_type.dart';
+import 'package:saturn/logic/equipment_type.dart';
 import 'package:toml/toml.dart';
 import 'package:xml/xml.dart';
 
@@ -715,10 +715,10 @@ class AppliedEnchantment {
 <document index="8">
 <source>lib/logic/equipment.dart</source>
 <document_content>
-import 'package:detool64/logic/enchantment.dart';
-import 'package:detool64/logic/equipment_type.dart';
-import 'package:detool64/logic/item_database.dart';
-import 'package:detool64/logic/record.dart';
+import 'package:saturn/logic/enchantment.dart';
+import 'package:saturn/logic/equipment_type.dart';
+import 'package:saturn/logic/item_database.dart';
+import 'package:saturn/logic/record.dart';
 import 'package:xml/xml.dart';
 
 class UpgradeDelivery {
@@ -852,7 +852,7 @@ class Equipment {
 <document index="9">
 <source>lib/logic/equipment_type.dart</source>
 <document_content>
-import 'package:detool64/logic/item_database.dart';
+import 'package:saturn/logic/item_database.dart';
 
 enum EquipmentType { weapon, ranged, magic, armor, helm }
 
@@ -901,8 +901,8 @@ extension EquipmentTypeExtension on EquipmentType {
 <source>lib/logic/item_database.dart</source>
 <document_content>
 import 'package:flutter/services.dart';
-import 'package:detool64/logic/enchantment.dart';
-import 'package:detool64/logic/equipment_type.dart';
+import 'package:saturn/logic/enchantment.dart';
+import 'package:saturn/logic/equipment_type.dart';
 import 'package:toml/toml.dart';
 
 class ItemTrait {
@@ -981,9 +981,9 @@ class ItemDatabase {
 <document index="11">
 <source>lib/logic/record.dart</source>
 <document_content>
-import 'package:detool64/logic/enchantment.dart';
-import 'package:detool64/logic/equipment_type.dart';
-import 'package:detool64/logic/equipment.dart';
+import 'package:saturn/logic/enchantment.dart';
+import 'package:saturn/logic/equipment_type.dart';
+import 'package:saturn/logic/equipment.dart';
 import 'package:xml/xml.dart';
 import 'package:xml/xpath.dart';
 
@@ -1263,10 +1263,10 @@ import 'dart:io';
 
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:detool64/logic/record.dart';
-import 'package:detool64/main.dart';
-import 'package:detool64/shizuku_api.dart';
-import 'package:detool64/shizuku_file.dart';
+import 'package:saturn/logic/record.dart';
+import 'package:saturn/main.dart';
+import 'package:saturn/shizuku_api.dart';
+import 'package:saturn/shizuku_file.dart';
 import 'package:toml/toml.dart';
 import 'package:xml/xml.dart';
 
@@ -1434,7 +1434,7 @@ class _AboutPageState extends State<AboutPage> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     const Text(
-                      "DETool64",
+                      "Saturn",
                       style: TextStyle(fontSize: 32),
                     ),
                     const Divider(),
@@ -1583,8 +1583,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
-import 'package:detool64/repo.dart';
-import 'package:detool64/main.dart';
+import 'package:saturn/repo.dart';
+import 'package:saturn/main.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 import 'package:uuid/uuid.dart';
 
@@ -1688,11 +1688,11 @@ class DebugPageState extends State<DebugPage> {
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:flutter/material.dart';
-import 'package:detool64/logic/equipment_type.dart';
-import 'package:detool64/logic/item_database.dart';
-import 'package:detool64/pages/equipment_manager.dart';
-import 'package:detool64/pages/inventory_view/inventory_view.dart';
-import 'package:detool64/logic/records_manager.dart';
+import 'package:saturn/logic/equipment_type.dart';
+import 'package:saturn/logic/item_database.dart';
+import 'package:saturn/pages/equipment_manager.dart';
+import 'package:saturn/pages/inventory_view/inventory_view.dart';
+import 'package:saturn/logic/records_manager.dart';
 
 class EquipmentPage extends StatefulWidget {
   const EquipmentPage({super.key});
@@ -1848,12 +1848,12 @@ class _EquipmentPageState extends State<EquipmentPage> {
 <source>lib/pages/equipment_manager.dart</source>
 <document_content>
 import 'package:flutter/material.dart';
-import 'package:detool64/logic/enchantment.dart';
-import 'package:detool64/logic/equipment.dart';
-import 'package:detool64/logic/equipment_type.dart';
-import 'package:detool64/logic/item_database.dart';
-import 'package:detool64/logic/records_manager.dart';
-import 'package:detool64/ui/split_filled_button.dart';
+import 'package:saturn/logic/enchantment.dart';
+import 'package:saturn/logic/equipment.dart';
+import 'package:saturn/logic/equipment_type.dart';
+import 'package:saturn/logic/item_database.dart';
+import 'package:saturn/logic/records_manager.dart';
+import 'package:saturn/ui/split_filled_button.dart';
 
 class EquipmentManager extends StatefulWidget {
   final Iterable<String> existingEquipment;
@@ -2120,9 +2120,9 @@ class _EquipmentManagerState extends State<EquipmentManager> {
 <document_content>
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:detool64/ui/click_tooltip.dart';
-import 'package:detool64/logic/record.dart';
-import 'package:detool64/logic/records_manager.dart';
+import 'package:saturn/ui/click_tooltip.dart';
+import 'package:saturn/logic/record.dart';
+import 'package:saturn/logic/records_manager.dart';
 
 class GeneralPage extends StatefulWidget {
   const GeneralPage({super.key});
@@ -2385,9 +2385,9 @@ class _GeneralPageState extends State<GeneralPage> {
 <document_content>
 import 'package:flutter/material.dart';
 import 'package:signals/signals_flutter.dart';
-import 'package:detool64/app.dart';
-import 'package:detool64/pages/about.dart';
-import 'package:detool64/themes.dart';
+import 'package:saturn/app.dart';
+import 'package:saturn/pages/about.dart';
+import 'package:saturn/themes.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
@@ -2525,9 +2525,9 @@ class _SettingsPageState extends State<SettingsPage> {
 <document_content>
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:detool64/pages/edit_xml/text_search_bar.dart';
-import 'package:detool64/logic/record.dart';
-import 'package:detool64/logic/records_manager.dart';
+import 'package:saturn/pages/edit_xml/text_search_bar.dart';
+import 'package:saturn/logic/record.dart';
+import 'package:saturn/logic/records_manager.dart';
 import 'package:xml/xml.dart';
 
 class EditXmlPage extends StatefulWidget {
@@ -2825,17 +2825,17 @@ class _EquipmentSearchBarState extends State<EquipmentSearchBar> {
 
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:detool64/app.dart';
-import 'package:detool64/ui/click_tooltip.dart';
-import 'package:detool64/ui/confirm_button.dart';
-import 'package:detool64/logic/enchantment.dart';
-import 'package:detool64/logic/equipment.dart';
-import 'package:detool64/logic/equipment_type.dart';
-import 'package:detool64/logic/item_database.dart';
-import 'package:detool64/pages/inventory_view/equipment_search_bar.dart';
-import 'package:detool64/pages/inventory_view/new_enchantment.dart';
-import 'package:detool64/pages/inventory_view/new_item.dart';
-import 'package:detool64/logic/records_manager.dart';
+import 'package:saturn/app.dart';
+import 'package:saturn/ui/click_tooltip.dart';
+import 'package:saturn/ui/confirm_button.dart';
+import 'package:saturn/logic/enchantment.dart';
+import 'package:saturn/logic/equipment.dart';
+import 'package:saturn/logic/equipment_type.dart';
+import 'package:saturn/logic/item_database.dart';
+import 'package:saturn/pages/inventory_view/equipment_search_bar.dart';
+import 'package:saturn/pages/inventory_view/new_enchantment.dart';
+import 'package:saturn/pages/inventory_view/new_item.dart';
+import 'package:saturn/logic/records_manager.dart';
 
 class InventoryTile extends StatelessWidget {
   final Widget title;
@@ -3670,9 +3670,9 @@ class _InventoryViewState extends State<InventoryView> {
 <source>lib/pages/inventory_view/new_enchantment.dart</source>
 <document_content>
 import 'package:flutter/material.dart';
-import 'package:detool64/ui/click_tooltip.dart';
-import 'package:detool64/logic/enchantment.dart';
-import 'package:detool64/logic/equipment_type.dart';
+import 'package:saturn/ui/click_tooltip.dart';
+import 'package:saturn/logic/enchantment.dart';
+import 'package:saturn/logic/equipment_type.dart';
 
 class NewEnchantmentDialog extends StatefulWidget {
   final List<Enchantment> enchantments;
@@ -3801,7 +3801,7 @@ class _NewEnchantmentDialogState extends State<NewEnchantmentDialog> {
 <source>lib/pages/inventory_view/new_item.dart</source>
 <document_content>
 import "package:flutter/material.dart";
-import 'package:detool64/logic/equipment_type.dart';
+import 'package:saturn/logic/equipment_type.dart';
 
 class NewItem extends StatefulWidget {
   final EquipmentType equipmentType;
@@ -3857,8 +3857,8 @@ class _NewItemState extends State<NewItem> {
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:detool64/logic/record.dart';
-import 'package:detool64/logic/records_manager.dart';
+import 'package:saturn/logic/record.dart';
+import 'package:saturn/logic/records_manager.dart';
 import 'package:uuid/uuid.dart';
 import 'package:xml/xml.dart';
 
@@ -3940,10 +3940,10 @@ import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
-import 'package:detool64/app.dart';
-import 'package:detool64/pages/records/new_record.dart';
-import 'package:detool64/logic/record.dart';
-import 'package:detool64/logic/records_manager.dart';
+import 'package:saturn/app.dart';
+import 'package:saturn/pages/records/new_record.dart';
+import 'package:saturn/logic/record.dart';
+import 'package:saturn/logic/records_manager.dart';
 import 'package:xml/xml.dart';
 
 class RecordsPage extends StatefulWidget {
@@ -4251,9 +4251,9 @@ class _RecordsPageState extends State<RecordsPage> {
 <document_content>
 import 'package:flutter/material.dart';
 import 'package:signals/signals_flutter.dart';
-import 'package:detool64/app.dart';
-import 'package:detool64/pages/debug.dart';
-import 'package:detool64/pages/settings.dart';
+import 'package:saturn/app.dart';
+import 'package:saturn/pages/debug.dart';
+import 'package:saturn/pages/settings.dart';
 
 class MainAppBar extends StatelessWidget implements PreferredSizeWidget {
   const MainAppBar({super.key});
@@ -4285,7 +4285,7 @@ class MainAppBar extends StatelessWidget implements PreferredSizeWidget {
                         ),
                     ],
                   )),
-              const Center(child: Text("DETool64")),
+              const Center(child: Text("Saturn")),
               Align(
                 alignment: Alignment.centerRight,
                 child: IconButton(

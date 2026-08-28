@@ -5,10 +5,10 @@ import 'package:log_plus/log_plus.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:signals/signals_flutter.dart';
-import 'package:detool64/app.dart';
-import 'package:detool64/logic/item_database.dart';
-import 'package:detool64/logic/enchantment.dart';
-import 'package:detool64/themes.dart';
+import 'package:saturn/app.dart';
+import 'package:saturn/logic/item_database.dart';
+import 'package:saturn/logic/enchantment.dart';
+import 'package:saturn/themes.dart';
 
 Logs constructLogger() {
   return logger = Logs(
@@ -129,7 +129,7 @@ class _RootAppState extends State<RootApp> {
               theme: lightTheme,
               darkTheme: darkTheme,
               themeMode: brightness_,
-              title: "DETool64",
+              title: "Saturn",
               home: const App());
         });
       },

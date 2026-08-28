@@ -1,7 +1,7 @@
-import 'package:detool64/logic/enchantment.dart';
-import 'package:detool64/logic/equipment_type.dart';
-import 'package:detool64/logic/item_database.dart';
-import 'package:detool64/logic/record.dart';
+import 'package:saturn/logic/enchantment.dart';
+import 'package:saturn/logic/equipment_type.dart';
+import 'package:saturn/logic/item_database.dart';
+import 'package:saturn/logic/record.dart';
 import 'package:xml/xml.dart';
 
 class UpgradeDelivery {

@@ -35,7 +35,7 @@ class _AboutPageState extends State<AboutPage> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     const Text(
-                      "DETool64",
+                      "Saturn",
                       style: TextStyle(fontSize: 32),
                     ),
                     const Divider(),

@@ -1,5 +1,5 @@
 import "package:flutter/material.dart";
-import 'package:detool64/logic/equipment_type.dart';
+import 'package:saturn/logic/equipment_type.dart';
 
 class NewItem extends StatefulWidget {
   final EquipmentType equipmentType;
