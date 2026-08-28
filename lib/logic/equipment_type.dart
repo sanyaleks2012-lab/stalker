@@ -1,6 +1,6 @@
 import 'package:saturn/logic/item_database.dart';
 
-enum EquipmentType { weapon, ranged, magic, armor, helm }
+enum EquipmentType { weapon, ranged, magic, armor, helm, skeleton }
 
 extension EquipmentTypeExtension on EquipmentType {
   static EquipmentType? fromId(String equipmentId) {
@@ -18,6 +18,8 @@ extension EquipmentTypeExtension on EquipmentType {
       return EquipmentType.armor;
     } else if (equipmentId.contains("HELM") || equipmentId.contains("HEAD")) {
       return EquipmentType.helm;
+    } else if (equipmentId.contains("SKELETON")) {
+      return EquipmentType.skeleton;
     } else {
       return null;
     }
@@ -35,6 +37,8 @@ extension EquipmentTypeExtension on EquipmentType {
         return "Armor";
       case EquipmentType.helm:
         return "Helm";
+      case EquipmentType.skeleton:
+        return "Skeleton";
     }
   }
 
