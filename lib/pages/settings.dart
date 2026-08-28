@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:signals/signals_flutter.dart';
-import 'package:saturn/app.dart';
-import 'package:saturn/pages/about.dart';
-import 'package:saturn/themes.dart';
+import 'package:detool64/app.dart';
+import 'package:detool64/pages/about.dart';
+import 'package:detool64/themes.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});

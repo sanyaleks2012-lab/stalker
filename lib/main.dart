@@ -1,14 +1,12 @@
-import 'dart:math';
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
 import 'package:log_plus/log_plus.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:signals/signals_flutter.dart';
-import 'package:saturn/app.dart';
-import 'package:saturn/logic/item_database.dart';
-import 'package:saturn/logic/enchantment.dart';
-import 'package:saturn/themes.dart';
+import 'package:detool64/app.dart';
+import 'package:detool64/logic/item_database.dart';
+import 'package:detool64/logic/enchantment.dart';
+import 'package:detool64/themes.dart';
 
 Logs constructLogger() {
   return logger = Logs(
@@ -40,53 +38,19 @@ class RootApp extends StatefulWidget {
 }
 
 class _RootAppState extends State<RootApp> {
-  static const List<String> demons = [
-    'shogun',
-    'wasp',
-    'lynx',
-    'widow',
-    'hermit',
-    'butcher',
-    'titan',
-  ];
-
-  static final Random _random = Random();
-
-  void _logDemonEvent() {
-    if (_random.nextDouble() < 0.15) {
-      final demon = demons[_random.nextInt(demons.length)];
-      final attitude = _random.nextBool() ? 'respect' : 'hate';
-      logger.i("nice u get $attitude from $demon");
-    }
-  }
-
   @override
   void initState() {
     super.initState();
-    _initializeApp();
-  }
-
-  Future<void> _initializeApp() async {
-    if (await Permission.manageExternalStorage.isDenied) {
-      await Permission.manageExternalStorage.request();
-    }
-
-    try {
-      await ItemDatabase.load();
-      logger.i("Loaded item database");
-      _logDemonEvent();
-
-      final traits = await ItemDatabase.loadTraits();
+    ItemDatabase.load().then((_) {
+      logger.i("Loaded item databse");
+    });
+    ItemDatabase.loadTraits().then((traits) {
       ItemDatabase.traits = traits.toList();
       logger.i("Loaded item traits");
-      _logDemonEvent();
-
-      await EnchantmentsManager.loadFromFiles();
+    });
+    EnchantmentsManager.loadFromFiles().then((_) {
       logger.i("Loaded enchantments from /sdcard/AddNew");
-      _logDemonEvent();
-    } catch (e, stack) {
-      logger.e("Failed to initialize app data: $e\n$stack");
-    }
+    });
   }
 
   @override

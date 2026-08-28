@@ -1,7 +1,7 @@
 import 'package:flutter/services.dart';
 
 class BridgeApi {
-  static const _channel = MethodChannel('com.onerdna.saturn/shizuku');
+  static const _channel = MethodChannel('com.onerdna.detool64/shizuku');
 
   static Future<bool?> pingBinder() async {
     return await _channel.invokeMethod("pingBinder");

@@ -1,8 +1,11 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:flutter/material.dart';
-import 'package:saturn/logic/equipment_type.dart';
-import 'package:saturn/pages/inventory_view/inventory_view.dart';
+import 'package:detool64/logic/equipment_type.dart';
+import 'package:detool64/logic/item_database.dart';
+import 'package:detool64/pages/equipment_manager.dart';
+import 'package:detool64/pages/inventory_view/inventory_view.dart';
+import 'package:detool64/logic/records_manager.dart';
 
 class EquipmentPage extends StatefulWidget {
   const EquipmentPage({super.key});
@@ -89,12 +92,17 @@ class _EquipmentPageState extends State<EquipmentPage> {
         }
       ),
       (
-        "Skeleton",
+        "Equipment Manager",
         "assets/images/weapons.png",
         () {
           Navigator.of(context).push(
             MaterialPageRoute(
-              builder: (context) => const InventoryView(EquipmentType.skeleton),
+              builder: (context) => EquipmentManager(
+                existingEquipment: ItemDatabase.getAllEquipment(),
+                ownedEquipment: RecordsManager.activeRecord!.equipment.values
+                    .expand((e) => e)
+                    .toList(),
+              ),
             ),
           );
         }

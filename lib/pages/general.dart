@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:saturn/ui/click_tooltip.dart';
-import 'package:saturn/logic/record.dart';
-import 'package:saturn/logic/records_manager.dart';
+import 'package:detool64/ui/click_tooltip.dart';
+import 'package:detool64/logic/record.dart';
+import 'package:detool64/logic/records_manager.dart';
 
 class GeneralPage extends StatefulWidget {
   const GeneralPage({super.key});
