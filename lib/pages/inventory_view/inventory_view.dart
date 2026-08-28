@@ -2,17 +2,17 @@
 
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:detool64/app.dart';
-import 'package:detool64/ui/click_tooltip.dart';
-import 'package:detool64/ui/confirm_button.dart';
-import 'package:detool64/logic/enchantment.dart';
-import 'package:detool64/logic/equipment.dart';
-import 'package:detool64/logic/equipment_type.dart';
-import 'package:detool64/logic/item_database.dart';
-import 'package:detool64/pages/inventory_view/equipment_search_bar.dart';
-import 'package:detool64/pages/inventory_view/new_enchantment.dart';
-import 'package:detool64/pages/inventory_view/new_item.dart';
-import 'package:detool64/logic/records_manager.dart';
+import 'package:saturn/app.dart';
+import 'package:saturn/ui/click_tooltip.dart';
+import 'package:saturn/ui/confirm_button.dart';
+import 'package:saturn/logic/enchantment.dart';
+import 'package:saturn/logic/equipment.dart';
+import 'package:saturn/logic/equipment_type.dart';
+import 'package:saturn/logic/item_database.dart';
+import 'package:saturn/pages/inventory_view/equipment_search_bar.dart';
+import 'package:saturn/pages/inventory_view/new_enchantment.dart';
+import 'package:saturn/pages/inventory_view/new_item.dart';
+import 'package:saturn/logic/records_manager.dart';
 
 class InventoryTile extends StatelessWidget {
   final Widget title;

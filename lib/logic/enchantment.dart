@@ -1,6 +1,6 @@
 import 'dart:io';
 import 'package:flutter/services.dart';
-import 'package:detool64/logic/equipment_type.dart';
+import 'package:saturn/logic/equipment_type.dart';
 import 'package:toml/toml.dart';
 import 'package:xml/xml.dart';
 

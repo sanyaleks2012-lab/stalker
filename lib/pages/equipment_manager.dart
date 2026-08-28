@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:detool64/logic/enchantment.dart';
-import 'package:detool64/logic/equipment.dart';
-import 'package:detool64/logic/equipment_type.dart';
-import 'package:detool64/logic/item_database.dart';
-import 'package:detool64/logic/records_manager.dart';
-import 'package:detool64/ui/split_filled_button.dart';
+import 'package:saturn/logic/enchantment.dart';
+import 'package:saturn/logic/equipment.dart';
+import 'package:saturn/logic/equipment_type.dart';
+import 'package:saturn/logic/item_database.dart';
+import 'package:saturn/logic/records_manager.dart';
+import 'package:saturn/ui/split_filled_button.dart';
 
 class EquipmentManager extends StatefulWidget {
   final Iterable<String> existingEquipment;

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:signals/signals_flutter.dart';
-import 'package:detool64/app.dart';
-import 'package:detool64/pages/debug.dart';
-import 'package:detool64/pages/settings.dart';
+import 'package:saturn/app.dart';
+import 'package:saturn/pages/debug.dart';
+import 'package:saturn/pages/settings.dart';
 
 class MainAppBar extends StatelessWidget implements PreferredSizeWidget {
   const MainAppBar({super.key});

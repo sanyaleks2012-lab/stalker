@@ -1,11 +1,11 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:flutter/material.dart';
-import 'package:detool64/logic/equipment_type.dart';
-import 'package:detool64/logic/item_database.dart';
-import 'package:detool64/pages/equipment_manager.dart';
-import 'package:detool64/pages/inventory_view/inventory_view.dart';
-import 'package:detool64/logic/records_manager.dart';
+import 'package:saturn/logic/equipment_type.dart';
+import 'package:saturn/logic/item_database.dart';
+import 'package:saturn/pages/equipment_manager.dart';
+import 'package:saturn/pages/inventory_view/inventory_view.dart';
+import 'package:saturn/logic/records_manager.dart';
 
 class EquipmentPage extends StatefulWidget {
   const EquipmentPage({super.key});

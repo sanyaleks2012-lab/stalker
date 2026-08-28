@@ -1,6 +1,6 @@
-import 'package:detool64/logic/enchantment.dart';
-import 'package:detool64/logic/equipment_type.dart';
-import 'package:detool64/logic/equipment.dart';
+import 'package:saturn/logic/enchantment.dart';
+import 'package:saturn/logic/equipment_type.dart';
+import 'package:saturn/logic/equipment.dart';
 import 'package:xml/xml.dart';
 import 'package:xml/xpath.dart';
 

@@ -1,6 +1,6 @@
 import 'package:flutter/services.dart';
-import 'package:detool64/logic/enchantment.dart';
-import 'package:detool64/logic/equipment_type.dart';
+import 'package:saturn/logic/enchantment.dart';
+import 'package:saturn/logic/equipment_type.dart';
 import 'package:toml/toml.dart';
 
 class ItemTrait {

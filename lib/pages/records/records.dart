@@ -8,10 +8,10 @@ import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
-import 'package:detool64/app.dart';
-import 'package:detool64/pages/records/new_record.dart';
-import 'package:detool64/logic/record.dart';
-import 'package:detool64/logic/records_manager.dart';
+import 'package:saturn/app.dart';
+import 'package:saturn/pages/records/new_record.dart';
+import 'package:saturn/logic/record.dart';
+import 'package:saturn/logic/records_manager.dart';
 import 'package:xml/xml.dart';
 
 class RecordsPage extends StatefulWidget {

@@ -2,7 +2,7 @@ import 'dart:io';
 import 'dart:math';
 
 import 'package:path_provider/path_provider.dart';
-import 'package:detool64/shizuku_api.dart';
+import 'package:saturn/shizuku_api.dart';
 
 Future<String> readFile(String path) async {
   final Directory directory = (await getExternalStorageDirectory())!;
