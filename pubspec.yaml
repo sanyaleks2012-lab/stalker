@@ -2,7 +2,7 @@ name: saturn
 description: "An android application to view and optionally modify the save files of Shadow Fight 2 Definitve Edition"
 publish_to: 'none'
 
-version: 0.0.1
+version: 0.0.2
 
 environment:
   sdk: ^3.5.4
