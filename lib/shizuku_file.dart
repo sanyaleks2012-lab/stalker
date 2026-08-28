@@ -6,13 +6,21 @@ import 'package:saturn/shizuku_api.dart';
 
 Future<String> readFile(String path) async {
   final Directory directory = (await getExternalStorageDirectory())!;
+  if (!await directory.exists()) {
+    await directory.create(recursive: true);
+  }
 
   final file = makeTempFile(directory.path);
 
-  validateCpOutput(
-      file.path, await BridgeApi.runCommand("cp $path ${file.path}"));
+  final cpOutput = await BridgeApi.runCommand("cp $path ${file.path}");
+  validateCpOutput(path, cpOutput);
+
+  if (!await file.exists()) {
+    throw FileSystemException('Failed to copy file via Shizuku', path);
+  }
 
   final contents = await file.readAsString();
+  await file.delete().catchError((_) async => File(file.path));
   await BridgeApi.runCommand("rm ${file.path}");
 
   return contents;
@@ -20,14 +28,14 @@ Future<String> readFile(String path) async {
 
 String validateCpOutput(String path, String? output) {
   if (output == null) {
-    throw FileSystemException('Unable to read file: unknown error', path);
+    return '';
   }
 
-  if (output == 'cp: $path: No such file or directory') {
+  if (output.contains('No such file or directory')) {
     throw FileSystemException('File does not exist', path);
-  } else if (output == 'cp: $path: Permission denied') {
+  } else if (output.contains('Permission denied')) {
     throw FileSystemException('Permission denied', path);
-  } else if (output == 'cp: $path: Is a directory') {
+  } else if (output.contains('Is a directory')) {
     throw FileSystemException('Path is a directory, not a file', path);
   }
 
@@ -44,9 +52,14 @@ File makeTempFile(String path) {
 
 Future<void> writeFile(String targetPath, String contents) async {
   final directory = (await getExternalStorageDirectory())!;
+  if (!await directory.exists()) {
+    await directory.create(recursive: true);
+  }
+
   final file = makeTempFile(directory.path);
   await file.writeAsString(contents);
-  validateCpOutput(
-      targetPath, await BridgeApi.runCommand("cp ${file.path} $targetPath"));
+  final cpOutput = await BridgeApi.runCommand("cp ${file.path} $targetPath");
+  validateCpOutput(targetPath, cpOutput);
+  await file.delete().catchError((_) async => File(file.path));
   await BridgeApi.runCommand("rm ${file.path}");
 }
