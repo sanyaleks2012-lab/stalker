@@ -163,7 +163,7 @@ class _AppState extends State<App> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   const Text(
-                      "This app is FOSS (free). Download only from the official Codeberg repository,The about section will contain the source code of the original application, this is just a fork "),
+                      "This app is FOSS (free). Download only from the official Codeberg repository: "),
                   TextButton(
                       onPressed: () => launchUrlString(Repo.repoUrl),
                       child: const Text(Repo.repoUrl))

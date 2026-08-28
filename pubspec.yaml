@@ -61,7 +61,6 @@ flutter:
     - assets/enchantments/complex_1.toml
     - assets/enchantments/complex_2.toml
     - assets/enchantments/complex_3.toml
-    - assets/enchantments/complex_4.toml
     - assets/enchantments/special_1.toml
     - assets/enchantments/special_2.toml
     - assets/enchantments/special_3.toml
