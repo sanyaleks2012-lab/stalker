@@ -8,7 +8,9 @@ extension EquipmentTypeExtension on EquipmentType {
     if (overrideType != null) {
       return overrideType;
     }
-    if (equipmentId.contains("WEAPON")) {
+    if (equipmentId.contains("SKELETON")) {
+      return EquipmentType.skeleton;
+    } else if (equipmentId.contains("WEAPON")) {
       return EquipmentType.weapon;
     } else if (equipmentId.contains("RANGED")) {
       return EquipmentType.ranged;
@@ -18,8 +20,6 @@ extension EquipmentTypeExtension on EquipmentType {
       return EquipmentType.armor;
     } else if (equipmentId.contains("HELM") || equipmentId.contains("HEAD")) {
       return EquipmentType.helm;
-    } else if (equipmentId.contains("SKELETON")) {
-      return EquipmentType.skeleton;
     } else {
       return null;
     }

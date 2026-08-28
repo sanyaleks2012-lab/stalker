@@ -71,4 +71,5 @@ flutter:
     - assets/item_database/magic.toml
     - assets/item_database/armor.toml
     - assets/item_database/helm.toml
+    - assets/item_database/skeleton.toml
     - assets/traits.toml
