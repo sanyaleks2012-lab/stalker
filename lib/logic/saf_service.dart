@@ -1,17 +1,23 @@
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
+import 'package:saturn/main.dart';
 
 class SafService {
-  /// Возвращает корневую директорию context.filesDir, 
-  /// доступную через AppDocumentsProvider
-  static Future<Directory> getAppFilesDir() async {
-    return await getApplicationDocumentsDirectory();
+  static late final Directory rootDir;
+
+  static Future<void> init() async {
+    rootDir = await getApplicationDocumentsDirectory();
+    if (!await rootDir.exists()) {
+      await rootDir.create(recursive: true);
+    }
+    logger.i("SAF Directory initialized: ${rootDir.path}");
   }
 
-  /// Пример создания файла, который сразу станет виден в SAF
-  static Future<File> createFile(String fileName, String content) async {
-    final dir = await getAppFilesDir();
-    final file = File('${dir.path}/$fileName');
-    return await file.writeAsString(content);
+  static File getFile(String relativePath) {
+    return File('${rootDir.path}/$relativePath');
+  }
+
+  static Directory getDirectory(String relativePath) {
+    return Directory('${rootDir.path}/$relativePath');
   }
 }
