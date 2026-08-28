@@ -2,10 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:saturn/logic/equipment_type.dart';
-import 'package:saturn/logic/item_database.dart';
-import 'package:saturn/pages/equipment_manager.dart';
 import 'package:saturn/pages/inventory_view/inventory_view.dart';
-import 'package:saturn/logic/records_manager.dart';
 
 class EquipmentPage extends StatefulWidget {
   const EquipmentPage({super.key});
@@ -92,17 +89,12 @@ class _EquipmentPageState extends State<EquipmentPage> {
         }
       ),
       (
-        "Equipment Manager",
+        "Skeleton",
         "assets/images/weapons.png",
         () {
           Navigator.of(context).push(
             MaterialPageRoute(
-              builder: (context) => EquipmentManager(
-                existingEquipment: ItemDatabase.getAllEquipment(),
-                ownedEquipment: RecordsManager.activeRecord!.equipment.values
-                    .expand((e) => e)
-                    .toList(),
-              ),
+              builder: (context) => const InventoryView(EquipmentType.skeleton),
             ),
           );
         }
