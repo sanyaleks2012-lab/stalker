@@ -30,7 +30,7 @@
             android:authorities="${applicationId}.shizuku"
             android:multiprocess="false"
             android:enabled="true"
-            android:exported="true" />
+            android:exported="false" />
 
         <provider
             android:name=".SaturnDocumentsProvider"
