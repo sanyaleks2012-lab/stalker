@@ -1,7 +1,9 @@
 import 'dart:convert';
-import 'dart:html' as html;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+
+// Для скачивания и загрузки файлов в Flutter Web без устаревшего dart:html
+import 'package:web/web.dart' as web;
 import 'package:toml/toml.dart';
 import 'package:xml/xml.dart';
 
@@ -159,14 +161,14 @@ class _WebHomePageState extends State<WebHomePage> {
   }
 
   void _pickAndLoadXml() {
-    final uploadInput = html.FileUploadInputElement()..accept = '.xml';
+    final uploadInput = web.HTMLInputElement()..type = 'file'..accept = '.xml';
     uploadInput.click();
 
     uploadInput.onChange.listen((event) {
       final files = uploadInput.files;
-      if (files != null && files.isNotEmpty) {
-        final file = files[0];
-        final reader = html.FileReader();
+      if (files != null && files.length > 0) {
+        final file = files.item(0)!;
+        final reader = web.FileReader();
 
         reader.onLoadEnd.listen((e) {
           try {
@@ -187,7 +189,8 @@ class _WebHomePageState extends State<WebHomePage> {
   }
 
   void _pickAndLoadToml() {
-    final uploadInput = html.FileUploadInputElement()
+    final uploadInput = web.HTMLInputElement()
+      ..type = 'file'
       ..accept = '.toml'
       ..multiple = true;
     uploadInput.click();
@@ -195,8 +198,9 @@ class _WebHomePageState extends State<WebHomePage> {
     uploadInput.onChange.listen((event) {
       final files = uploadInput.files;
       if (files != null) {
-        for (var file in files) {
-          final reader = html.FileReader();
+        for (var i = 0; i < files.length; i++) {
+          final file = files.item(i)!;
+          final reader = web.FileReader();
           reader.onLoadEnd.listen((e) {
             final content = reader.result as String;
             setState(() {
@@ -215,14 +219,15 @@ class _WebHomePageState extends State<WebHomePage> {
 
     final xmlString = _xmlDocument!.toXmlString(pretty: true, indent: '  ');
     final bytes = utf8.encode(xmlString);
-    final blob = html.Blob([bytes], 'text/xml');
-    final url = html.Url.createObjectUrlFromBlob(blob);
+    final blob = web.Blob([bytes.toJS].toJS, web.BlobPropertyBag(type: 'text/xml'));
+    final url = web.URL.createObjectURL(blob);
 
-    html.AnchorElement(href: url)
-      ..setAttribute('download', _currentFileName)
-      ..click();
+    final anchor = web.HTMLAnchorElement()
+      ..href = url
+      ..download = _currentFileName;
+    anchor.click();
 
-    html.Url.revokeObjectUrl(url);
+    web.URL.revokeObjectURL(url);
     _showSnackBar('Файл $_currentFileName сохранен', Colors.green);
   }
 
@@ -577,7 +582,7 @@ class _WebHomePageState extends State<WebHomePage> {
                             title: Text(meta?.name ?? id, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
                             subtitle: Wrap(
                               spacing: 6,
-                              cross: WrapCrossAlignment.center,
+                              crossAxisAlignment: WrapCrossAlignment.center,
                               children: [
                                 Text(id, style: TextStyle(color: Colors.white.withOpacity(0.4), fontSize: 11)),
                                 if (isEquipped)
