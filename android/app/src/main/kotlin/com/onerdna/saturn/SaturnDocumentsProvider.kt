@@ -29,7 +29,9 @@ class SaturnDocumentsProvider : DocumentsProvider() {
         DocumentsContract.Document.COLUMN_SIZE
     )
 
-    override fun onCreate(): Boolean = true
+    override fun onCreate(): Boolean {
+        return true
+    }
 
     override fun queryRoots(projection: Array<out String>?): Cursor {
         val result = MatrixCursor(projection ?: rootProjection)
@@ -41,6 +43,8 @@ class SaturnDocumentsProvider : DocumentsProvider() {
                 appDir.mkdirs()
             }
 
+            val iconRes = if (ctx.applicationInfo.icon != 0) ctx.applicationInfo.icon else android.R.mipmap.sym_def_app_icon
+
             result.newRow().apply {
                 add(DocumentsContract.Root.COLUMN_ROOT_ID, "saturn_root")
                 add(DocumentsContract.Root.COLUMN_DOCUMENT_ID, appDir.absolutePath)
@@ -50,11 +54,9 @@ class SaturnDocumentsProvider : DocumentsProvider() {
                     DocumentsContract.Root.FLAG_SUPPORTS_CREATE or DocumentsContract.Root.FLAG_SUPPORTS_SEARCH
                 )
                 add(DocumentsContract.Root.COLUMN_MIME_TYPES, "*/*")
-                add(DocumentsContract.Root.COLUMN_ICON, ctx.applicationInfo.icon)
+                add(DocumentsContract.Root.COLUMN_ICON, iconRes)
             }
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
+        } catch (_: Exception) {}
 
         return result
     }
