@@ -11,62 +11,85 @@ import java.io.FileNotFoundException
 
 class SaturnDocumentsProvider : DocumentsProvider() {
 
-    private val rootProjection = arrayOf(
-        DocumentsContract.Root.COLUMN_ROOT_ID,
-        DocumentsContract.Root.COLUMN_DOCUMENT_ID,
-        DocumentsContract.Root.COLUMN_TITLE,
-        DocumentsContract.Root.COLUMN_FLAGS,
-        DocumentsContract.Root.COLUMN_MIME_TYPES,
-        DocumentsContract.Root.COLUMN_ICON
-    )
+    companion object {
+        private const val ROOT_ID = "saturn_root"
+        private val DEFAULT_ROOT_PROJECTION = arrayOf(
+            DocumentsContract.Root.COLUMN_ROOT_ID,
+            DocumentsContract.Root.COLUMN_FLAGS,
+            DocumentsContract.Root.COLUMN_TITLE,
+            DocumentsContract.Root.COLUMN_SUMMARY,
+            DocumentsContract.Root.COLUMN_DOCUMENT_ID,
+            DocumentsContract.Root.COLUMN_MIME_TYPES,
+            DocumentsContract.Root.COLUMN_ICON
+        )
+        private val DEFAULT_DOCUMENT_PROJECTION = arrayOf(
+            DocumentsContract.Document.COLUMN_DOCUMENT_ID,
+            DocumentsContract.Document.COLUMN_MIME_TYPE,
+            DocumentsContract.Document.COLUMN_DISPLAY_NAME,
+            DocumentsContract.Document.COLUMN_LAST_MODIFIED,
+            DocumentsContract.Document.COLUMN_FLAGS,
+            DocumentsContract.Document.COLUMN_SIZE
+        )
+    }
 
-    private val docProjection = arrayOf(
-        DocumentsContract.Document.COLUMN_DOCUMENT_ID,
-        DocumentsContract.Document.COLUMN_MIME_TYPE,
-        DocumentsContract.Document.COLUMN_DISPLAY_NAME,
-        DocumentsContract.Document.COLUMN_LAST_MODIFIED,
-        DocumentsContract.Document.COLUMN_FLAGS,
-        DocumentsContract.Document.COLUMN_SIZE
-    )
+    override fun onCreate(): Boolean = true
 
-    override fun onCreate(): Boolean {
-        return true
+    private fun getBaseDir(): File {
+        val ctx = context ?: throw IllegalStateException("Context is null")
+        val dir = ctx.getExternalFilesDir(null) ?: ctx.filesDir
+        if (!dir.exists()) {
+            dir.mkdirs()
+        }
+        return dir
+    }
+
+    private fun getFileForDocId(docId: String): File {
+        val base = getBaseDir()
+        if (docId == ROOT_ID || docId.isEmpty()) {
+            return base
+        }
+        val target = File(base, docId)
+        if (!target.canonicalPath.startsWith(base.canonicalPath)) {
+            throw SecurityException("Access denied: path outside base directory")
+        }
+        return target
+    }
+
+    private fun getDocIdForFile(file: File): String {
+        val base = getBaseDir()
+        if (file.canonicalPath == base.canonicalPath) {
+            return ROOT_ID
+        }
+        return file.canonicalPath.substring(base.canonicalPath.length + 1)
     }
 
     override fun queryRoots(projection: Array<out String>?): Cursor {
-        val result = MatrixCursor(projection ?: rootProjection)
+        val result = MatrixCursor(projection ?: DEFAULT_ROOT_PROJECTION)
         val ctx = context ?: return result
 
-        try {
-            val appDir = ctx.getExternalFilesDir(null) ?: ctx.filesDir
-            if (!appDir.exists()) {
-                appDir.mkdirs()
-            }
+        val iconRes = if (ctx.applicationInfo.icon != 0) ctx.applicationInfo.icon else android.R.mipmap.sym_def_app_icon
 
-            val iconRes = if (ctx.applicationInfo.icon != 0) ctx.applicationInfo.icon else android.R.mipmap.sym_def_app_icon
-
-            result.newRow().apply {
-                add(DocumentsContract.Root.COLUMN_ROOT_ID, "saturn_root")
-                add(DocumentsContract.Root.COLUMN_DOCUMENT_ID, appDir.absolutePath)
-                add(DocumentsContract.Root.COLUMN_TITLE, "Saturn")
-                add(
-                    DocumentsContract.Root.COLUMN_FLAGS,
-                    DocumentsContract.Root.FLAG_SUPPORTS_CREATE or DocumentsContract.Root.FLAG_SUPPORTS_SEARCH
-                )
-                add(DocumentsContract.Root.COLUMN_MIME_TYPES, "*/*")
-                add(DocumentsContract.Root.COLUMN_ICON, iconRes)
-            }
-        } catch (_: Exception) {}
-
+        result.newRow().apply {
+            add(DocumentsContract.Root.COLUMN_ROOT_ID, ROOT_ID)
+            add(DocumentsContract.Root.COLUMN_DOCUMENT_ID, ROOT_ID)
+            add(DocumentsContract.Root.COLUMN_TITLE, "Saturn")
+            add(DocumentsContract.Root.COLUMN_SUMMARY, "Data Folder")
+            add(
+                DocumentsContract.Root.COLUMN_FLAGS,
+                DocumentsContract.Root.FLAG_SUPPORTS_CREATE or
+                DocumentsContract.Root.FLAG_SUPPORTS_SEARCH or
+                DocumentsContract.Root.FLAG_LOCAL_ONLY
+            )
+            add(DocumentsContract.Root.COLUMN_MIME_TYPES, "*/*")
+            add(DocumentsContract.Root.COLUMN_ICON, iconRes)
+        }
         return result
     }
 
     override fun queryDocument(documentId: String, projection: Array<out String>?): Cursor {
-        val result = MatrixCursor(projection ?: docProjection)
-        val file = File(documentId)
-        if (file.exists()) {
-            appendFile(result, file)
-        }
+        val result = MatrixCursor(projection ?: DEFAULT_DOCUMENT_PROJECTION)
+        val file = getFileForDocId(documentId)
+        appendFile(result, documentId, file)
         return result
     }
 
@@ -75,14 +98,18 @@ class SaturnDocumentsProvider : DocumentsProvider() {
         projection: Array<out String>?,
         sortOrder: String?
     ): Cursor {
-        val result = MatrixCursor(projection ?: docProjection)
-        val parent = File(parentDocumentId)
+        val result = MatrixCursor(projection ?: DEFAULT_DOCUMENT_PROJECTION)
+        val parent = getFileForDocId(parentDocumentId)
         if (parent.exists() && parent.isDirectory) {
             parent.listFiles()?.forEach { file ->
-                appendFile(result, file)
+                appendFile(result, getDocIdForFile(file), file)
             }
         }
         return result
+    }
+
+    override fun isChildDocument(parentDocumentId: String, documentId: String): Boolean {
+        return documentId.startsWith(parentDocumentId)
     }
 
     override fun openDocument(
@@ -90,7 +117,7 @@ class SaturnDocumentsProvider : DocumentsProvider() {
         mode: String,
         signal: CancellationSignal?
     ): ParcelFileDescriptor {
-        val file = File(documentId)
+        val file = getFileForDocId(documentId)
         val accessMode = ParcelFileDescriptor.parseMode(mode)
         return ParcelFileDescriptor.open(file, accessMode)
     }
@@ -100,7 +127,7 @@ class SaturnDocumentsProvider : DocumentsProvider() {
         mimeType: String,
         displayName: String
     ): String {
-        val parent = File(parentDocumentId)
+        val parent = getFileForDocId(parentDocumentId)
         if (!parent.exists()) {
             parent.mkdirs()
         }
@@ -110,17 +137,17 @@ class SaturnDocumentsProvider : DocumentsProvider() {
         } else {
             file.createNewFile()
         }
-        return file.absolutePath
+        return getDocIdForFile(file)
     }
 
     override fun deleteDocument(documentId: String) {
-        val file = File(documentId)
+        val file = getFileForDocId(documentId)
         if (!file.deleteRecursively()) {
             throw FileNotFoundException("Failed to delete $documentId")
         }
     }
 
-    private fun appendFile(result: MatrixCursor, file: File) {
+    private fun appendFile(result: MatrixCursor, docId: String, file: File) {
         var flags = 0
         if (file.isDirectory) {
             if (file.canWrite()) flags = flags or DocumentsContract.Document.FLAG_DIR_SUPPORTS_CREATE
@@ -131,7 +158,7 @@ class SaturnDocumentsProvider : DocumentsProvider() {
         val mime = if (file.isDirectory) DocumentsContract.Document.MIME_TYPE_DIR else "application/octet-stream"
 
         result.newRow().apply {
-            add(DocumentsContract.Document.COLUMN_DOCUMENT_ID, file.absolutePath)
+            add(DocumentsContract.Document.COLUMN_DOCUMENT_ID, docId)
             add(DocumentsContract.Document.COLUMN_DISPLAY_NAME, file.name)
             add(DocumentsContract.Document.COLUMN_SIZE, file.length())
             add(DocumentsContract.Document.COLUMN_MIME_TYPE, mime)
