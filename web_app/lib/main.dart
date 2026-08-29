@@ -34,7 +34,7 @@ class SaturnWebApp extends StatelessWidget {
         brightness: Brightness.dark,
         colorSchemeSeed: const Color(0xFF673AB7),
         scaffoldBackgroundColor: const Color(0xFF0F0F14),
-        cardTheme: CardTheme(
+        cardTheme: CardThemeData(
           color: const Color(0xFF181820),
           elevation: 4,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
@@ -378,7 +378,7 @@ class _WebHomePageState extends State<WebHomePage> {
           children: [
             const Icon(Icons.blur_on, color: Colors.deepPurpleAccent, size: 28),
             const SizedBox(width: 10),
-            Text('Saturn Studio', style: TextStyle(fontWeight: FontWeight.bold, letterSpacing: 1.1)),
+            const Text('Saturn Studio', style: TextStyle(fontWeight: FontWeight.bold, letterSpacing: 1.1)),
             const SizedBox(width: 16),
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
@@ -458,7 +458,7 @@ class _WebHomePageState extends State<WebHomePage> {
                         decoration: InputDecoration(
                           hintText: 'Поиск по базе TOML...',
                           prefixIcon: const Icon(Icons.search, size: 18, color: Colors.grey),
-                          dense: true,
+                          isDense: true,
                           filled: true,
                           fillColor: const Color(0xFF101016),
                           border: OutlineInputBorder(
@@ -537,7 +537,7 @@ class _WebHomePageState extends State<WebHomePage> {
                         decoration: InputDecoration(
                           hintText: 'Фильтр инвентаря XML...',
                           prefixIcon: const Icon(Icons.filter_list, size: 18, color: Colors.grey),
-                          dense: true,
+                          isDense: true,
                           filled: true,
                           fillColor: const Color(0xFF101016),
                           border: OutlineInputBorder(
