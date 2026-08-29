@@ -13,6 +13,7 @@ class SaturnDocumentsProvider : DocumentsProvider() {
 
     companion object {
         private const val ROOT_ID = "saturn_root"
+        
         private val DEFAULT_ROOT_PROJECTION = arrayOf(
             DocumentsContract.Root.COLUMN_ROOT_ID,
             DocumentsContract.Root.COLUMN_FLAGS,
@@ -22,6 +23,7 @@ class SaturnDocumentsProvider : DocumentsProvider() {
             DocumentsContract.Root.COLUMN_MIME_TYPES,
             DocumentsContract.Root.COLUMN_ICON
         )
+
         private val DEFAULT_DOCUMENT_PROJECTION = arrayOf(
             DocumentsContract.Document.COLUMN_DOCUMENT_ID,
             DocumentsContract.Document.COLUMN_MIME_TYPE,
@@ -34,8 +36,8 @@ class SaturnDocumentsProvider : DocumentsProvider() {
 
     override fun onCreate(): Boolean = true
 
-    private fun getBaseDir(): File? {
-        val ctx = context ?: return null
+    private fun getBaseDir(): File {
+        val ctx = context ?: throw IllegalStateException("Context is null")
         val dir = ctx.getExternalFilesDir(null) ?: ctx.filesDir
         if (!dir.exists()) {
             dir.mkdirs()
@@ -43,20 +45,20 @@ class SaturnDocumentsProvider : DocumentsProvider() {
         return dir
     }
 
-    private fun getFileForDocId(docId: String): File? {
-        val base = getBaseDir() ?: return null
+    private fun getFileForDocId(docId: String): File {
+        val base = getBaseDir()
         if (docId == ROOT_ID || docId.isEmpty()) {
             return base
         }
         val target = File(base, docId)
         if (!target.canonicalPath.startsWith(base.canonicalPath)) {
-            throw SecurityException("Access denied: path outside base directory")
+            throw SecurityException("Access denied")
         }
         return target
     }
 
     private fun getDocIdForFile(file: File): String {
-        val base = getBaseDir() ?: return ROOT_ID
+        val base = getBaseDir()
         if (file.canonicalPath == base.canonicalPath) {
             return ROOT_ID
         }
@@ -66,7 +68,6 @@ class SaturnDocumentsProvider : DocumentsProvider() {
     override fun queryRoots(projection: Array<out String>?): Cursor {
         val result = MatrixCursor(projection ?: DEFAULT_ROOT_PROJECTION)
         val ctx = context ?: return result
-        val baseDir = getBaseDir() ?: return result
 
         val iconRes = if (ctx.applicationInfo.icon != 0) ctx.applicationInfo.icon else android.R.mipmap.sym_def_app_icon
 
@@ -90,7 +91,7 @@ class SaturnDocumentsProvider : DocumentsProvider() {
     override fun queryDocument(documentId: String, projection: Array<out String>?): Cursor {
         val result = MatrixCursor(projection ?: DEFAULT_DOCUMENT_PROJECTION)
         val file = getFileForDocId(documentId)
-        if (file != null && file.exists()) {
+        if (file.exists()) {
             appendFile(result, documentId, file)
         }
         return result
@@ -103,7 +104,7 @@ class SaturnDocumentsProvider : DocumentsProvider() {
     ): Cursor {
         val result = MatrixCursor(projection ?: DEFAULT_DOCUMENT_PROJECTION)
         val parent = getFileForDocId(parentDocumentId)
-        if (parent != null && parent.exists() && parent.isDirectory) {
+        if (parent.exists() && parent.isDirectory) {
             parent.listFiles()?.forEach { file ->
                 appendFile(result, getDocIdForFile(file), file)
             }
@@ -120,7 +121,8 @@ class SaturnDocumentsProvider : DocumentsProvider() {
         mode: String,
         signal: CancellationSignal?
     ): ParcelFileDescriptor {
-        val file = getFileForDocId(documentId) ?: throw FileNotFoundException("File not found")
+        val file = getFileForDocId(documentId)
+        if (!file.exists()) throw FileNotFoundException("File missing")
         val accessMode = ParcelFileDescriptor.parseMode(mode)
         return ParcelFileDescriptor.open(file, accessMode)
     }
@@ -130,7 +132,7 @@ class SaturnDocumentsProvider : DocumentsProvider() {
         mimeType: String,
         displayName: String
     ): String {
-        val parent = getFileForDocId(parentDocumentId) ?: throw FileNotFoundException("Parent folder not found")
+        val parent = getFileForDocId(parentDocumentId)
         if (!parent.exists()) {
             parent.mkdirs()
         }
@@ -144,7 +146,7 @@ class SaturnDocumentsProvider : DocumentsProvider() {
     }
 
     override fun deleteDocument(documentId: String) {
-        val file = getFileForDocId(documentId) ?: throw FileNotFoundException("File not found")
+        val file = getFileForDocId(documentId)
         if (!file.deleteRecursively()) {
             throw FileNotFoundException("Failed to delete $documentId")
         }
