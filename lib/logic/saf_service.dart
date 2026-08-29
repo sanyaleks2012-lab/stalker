@@ -1,14 +1,10 @@
-import 'package:flutter/services.dart';
+import 'dart:io';
 
 class SafService {
-  static const MethodChannel _channel = MethodChannel('com.onerdna.saturn/saf');
-
-  static Future<String?> openDocumentTree() async {
-    try {
-      final String? uri = await _channel.invokeMethod('openDocumentTree');
-      return uri;
-    } on PlatformException catch (_) {
-      return null;
+  static Future<void> init() async {
+    final Directory internalDir = Directory('/data/data/com.onerdna.saturn/files');
+    if (!await internalDir.exists()) {
+      await internalDir.create(recursive: true);
     }
   }
 }

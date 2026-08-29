@@ -12,8 +12,8 @@ import java.io.FileNotFoundException
 class SaturnDocumentsProvider : DocumentsProvider() {
 
     companion object {
-        private const val ROOT_ID = "saturn_root"
-        
+        private const val ROOT_ID = "saturn_data_root"
+
         private val DEFAULT_ROOT_PROJECTION = arrayOf(
             DocumentsContract.Root.COLUMN_ROOT_ID,
             DocumentsContract.Root.COLUMN_FLAGS,
@@ -36,9 +36,10 @@ class SaturnDocumentsProvider : DocumentsProvider() {
 
     override fun onCreate(): Boolean = true
 
+    // Термукс-подход: явно берем внутренний ctx.filesDir (/data/data/com.onerdna.saturn/files)
     private fun getBaseDir(): File {
         val ctx = context ?: throw IllegalStateException("Context is null")
-        val dir = ctx.getExternalFilesDir(null) ?: ctx.filesDir
+        val dir = ctx.filesDir 
         if (!dir.exists()) {
             dir.mkdirs()
         }
@@ -51,8 +52,9 @@ class SaturnDocumentsProvider : DocumentsProvider() {
             return base
         }
         val target = File(base, docId)
+        // Защита от Directory Traversal (../)
         if (!target.canonicalPath.startsWith(base.canonicalPath)) {
-            throw SecurityException("Access denied")
+            throw SecurityException("Access denied: path outside sandbox")
         }
         return target
     }
@@ -75,7 +77,7 @@ class SaturnDocumentsProvider : DocumentsProvider() {
             add(DocumentsContract.Root.COLUMN_ROOT_ID, ROOT_ID)
             add(DocumentsContract.Root.COLUMN_DOCUMENT_ID, ROOT_ID)
             add(DocumentsContract.Root.COLUMN_TITLE, "Saturn")
-            add(DocumentsContract.Root.COLUMN_SUMMARY, "Data Folder")
+            add(DocumentsContract.Root.COLUMN_SUMMARY, "/data/data/com.onerdna.saturn/files")
             add(
                 DocumentsContract.Root.COLUMN_FLAGS,
                 DocumentsContract.Root.FLAG_SUPPORTS_CREATE or
@@ -122,7 +124,8 @@ class SaturnDocumentsProvider : DocumentsProvider() {
         signal: CancellationSignal?
     ): ParcelFileDescriptor {
         val file = getFileForDocId(documentId)
-        if (!file.exists()) throw FileNotFoundException("File missing")
+        if (!file.exists()) throw FileNotFoundException("File missing: ${file.absolutePath}")
+        
         val accessMode = ParcelFileDescriptor.parseMode(mode)
         return ParcelFileDescriptor.open(file, accessMode)
     }
@@ -152,12 +155,23 @@ class SaturnDocumentsProvider : DocumentsProvider() {
         }
     }
 
+    override fun renameDocument(documentId: String, displayName: String): String? {
+        val file = getFileForDocId(documentId)
+        val target = File(file.parentFile, displayName)
+        if (file.renameTo(target)) {
+            return getDocIdForFile(target)
+        }
+        throw FileNotFoundException("Failed to rename $documentId")
+    }
+
     private fun appendFile(result: MatrixCursor, docId: String, file: File) {
-        var flags = 0
+        var flags = DocumentsContract.Document.FLAG_SUPPORTS_DELETE or
+                    DocumentsContract.Document.FLAG_SUPPORTS_RENAME
+
         if (file.isDirectory) {
-            if (file.canWrite()) flags = flags or DocumentsContract.Document.FLAG_DIR_SUPPORTS_CREATE
-        } else if (file.canWrite()) {
-            flags = flags or DocumentsContract.Document.FLAG_SUPPORTS_WRITE or DocumentsContract.Document.FLAG_SUPPORTS_DELETE
+            flags = flags or DocumentsContract.Document.FLAG_DIR_SUPPORTS_CREATE
+        } else {
+            flags = flags or DocumentsContract.Document.FLAG_SUPPORTS_WRITE
         }
 
         val mime = if (file.isDirectory) DocumentsContract.Document.MIME_TYPE_DIR else "application/octet-stream"
