@@ -1,0 +1,22 @@
+[group]
+id = "complex_1"
+displayName = "Complex I"
+color = "0xFF441752"
+order = 2
+hasAspect = false
+
+[tempest_rage]
+name = "Tempest Rage"
+id = "PERK_MONK_SET_WHIRL"
+
+[typhoon_of_spirits]
+name = "Typhoon Of Spirits"
+id = "PERK_SENTINEL_SET_SUPER_RETURN"
+
+[crimson_corruption]
+name = "Crimson Corruption"
+id = "PERK_WARLOCK_SET_CURSE"
+
+[icy_resistance]
+name = "Icy Resistance"
+id = "PERK_GUARDIAN_SET_PROTECTION"

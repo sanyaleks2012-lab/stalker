@@ -1,0 +1,22 @@
+[group]
+id = "special_1"
+displayName = "Special I"
+color = "0xFAE251AA"
+order = 5
+hasAspect = false
+
+[smoke_bomb]
+name = "Smoke Bomb"
+id = "PERK_SHADOW_CLOAK"
+
+[storm]
+name = "Storm"
+id = "PERK_HERMITSTORM"
+
+[earthquake]
+name = "Earthquake"
+id = "PERK_EARTHQUAKE"
+
+[waspfly]
+name = "Wall Jump"
+id = "PERK_WASPFLY"
