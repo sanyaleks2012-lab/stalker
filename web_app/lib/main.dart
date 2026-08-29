@@ -149,9 +149,9 @@ class _WebHomePageState extends State<WebHomePage> {
     });
   }
 
-  void _removeItem(XmlElement itemNode) {
+    void _removeItem(XmlElement itemNode) {
     setState(() {
-      itemNode.replace(const []);
+      itemNode.remove();
     });
   }
 
