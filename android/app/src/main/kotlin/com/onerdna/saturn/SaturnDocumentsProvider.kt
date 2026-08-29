@@ -33,30 +33,38 @@ class SaturnDocumentsProvider : DocumentsProvider() {
 
     override fun queryRoots(projection: Array<out String>?): Cursor {
         val result = MatrixCursor(projection ?: rootProjection)
-        val context = context ?: return result
-        
-        val appDir = context.getExternalFilesDir(null) ?: context.filesDir
-        if (!appDir.exists()) {
-            appDir.mkdirs()
+        val ctx = context ?: return result
+
+        try {
+            val appDir = ctx.getExternalFilesDir(null) ?: ctx.filesDir
+            if (!appDir.exists()) {
+                appDir.mkdirs()
+            }
+
+            result.newRow().apply {
+                add(DocumentsContract.Root.COLUMN_ROOT_ID, "saturn_root")
+                add(DocumentsContract.Root.COLUMN_DOCUMENT_ID, appDir.absolutePath)
+                add(DocumentsContract.Root.COLUMN_TITLE, "Saturn")
+                add(
+                    DocumentsContract.Root.COLUMN_FLAGS,
+                    DocumentsContract.Root.FLAG_SUPPORTS_CREATE or DocumentsContract.Root.FLAG_SUPPORTS_SEARCH
+                )
+                add(DocumentsContract.Root.COLUMN_MIME_TYPES, "*/*")
+                add(DocumentsContract.Root.COLUMN_ICON, ctx.applicationInfo.icon)
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
 
-        result.newRow().apply {
-            add(DocumentsContract.Root.COLUMN_ROOT_ID, "saturn_root")
-            add(DocumentsContract.Root.COLUMN_DOCUMENT_ID, appDir.absolutePath)
-            add(DocumentsContract.Root.COLUMN_TITLE, "Saturn")
-            add(
-                DocumentsContract.Root.COLUMN_FLAGS,
-                DocumentsContract.Root.FLAG_SUPPORTS_CREATE or DocumentsContract.Root.FLAG_SUPPORTS_SEARCH
-            )
-            add(DocumentsContract.Root.COLUMN_MIME_TYPES, "*/*")
-            add(DocumentsContract.Root.COLUMN_ICON, context.applicationInfo.icon)
-        }
         return result
     }
 
     override fun queryDocument(documentId: String, projection: Array<out String>?): Cursor {
         val result = MatrixCursor(projection ?: docProjection)
-        appendFile(result, File(documentId))
+        val file = File(documentId)
+        if (file.exists()) {
+            appendFile(result, file)
+        }
         return result
     }
 
