@@ -21,4 +21,17 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   assets:
-    - assets/toml/
+    - assets/toml/armor.toml
+    - assets/toml/complex_1.toml
+    - assets/toml/complex_2.toml
+    - assets/toml/complex_3.toml
+    - assets/toml/helm.toml
+    - assets/toml/magic.toml
+    - assets/toml/medium.toml
+    - assets/toml/ranged.toml
+    - assets/toml/simple.toml
+    - assets/toml/special_1.toml
+    - assets/toml/special_2.toml
+    - assets/toml/special_3.toml
+    - assets/toml/traits.toml
+    - assets/toml/weapon.toml

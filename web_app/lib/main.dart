@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:html' as html;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:toml/toml.dart';
@@ -26,12 +27,18 @@ class SaturnWebApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Saturn Web Panel',
+      title: 'Saturn Web Studio',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         useMaterial3: true,
-        colorSchemeSeed: Colors.deepPurple,
         brightness: Brightness.dark,
+        colorSchemeSeed: const Color(0xFF673AB7),
+        scaffoldBackgroundColor: const Color(0xFF0F0F14),
+        cardTheme: CardTheme(
+          color: const Color(0xFF181820),
+          elevation: 4,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        ),
       ),
       home: const WebHomePage(),
     );
@@ -46,9 +53,30 @@ class WebHomePage extends StatefulWidget {
 }
 
 class _WebHomePageState extends State<WebHomePage> {
+  static const List<String> _tomlFiles = [
+    'assets/toml/armor.toml',
+    'assets/toml/complex_1.toml',
+    'assets/toml/complex_2.toml',
+    'assets/toml/complex_3.toml',
+    'assets/toml/helm.toml',
+    'assets/toml/magic.toml',
+    'assets/toml/medium.toml',
+    'assets/toml/ranged.toml',
+    'assets/toml/simple.toml',
+    'assets/toml/special_1.toml',
+    'assets/toml/special_2.toml',
+    'assets/toml/special_3.toml',
+    'assets/toml/traits.toml',
+    'assets/toml/weapon.toml',
+  ];
+
   final Map<String, ItemMetadata> _tomlDatabase = {};
   XmlDocument? _xmlDocument;
+  String _currentFileName = 'users.xml';
   bool _isLoading = true;
+
+  String _searchTomlQuery = '';
+  String _searchXmlQuery = '';
 
   @override
   void initState() {
@@ -58,47 +86,45 @@ class _WebHomePageState extends State<WebHomePage> {
 
   Future<void> _loadInitialData() async {
     await _loadTomlFiles();
-    _loadSampleXml();
+    _loadDefaultXml();
     setState(() => _isLoading = false);
   }
 
-  /// Автоматический поиск и загрузка всех TOML-файлов из assets/toml/
   Future<void> _loadTomlFiles() async {
-    try {
-      final manifestContent = await rootBundle.loadString('AssetManifest.json');
-      final Map<String, dynamic> manifestMap = json.decode(manifestContent);
-
-      final tomlPaths = manifestMap.keys.where(
-        (String key) => key.startsWith('assets/toml/') && key.endsWith('.toml'),
-      );
-
-      for (final path in tomlPaths) {
+    for (final path in _tomlFiles) {
+      try {
         final content = await rootBundle.loadString(path);
-        final parser = TomlDocument.parse(content).toMap();
-
-        parser.forEach((key, value) {
-          if (value is Map<String, dynamic>) {
-            final name = value['Name']?.toString() ?? key;
-            final desc = value['Description']?.toString() ?? '';
-            _tomlDatabase[key] = ItemMetadata(
-              id: key,
-              name: name,
-              description: desc,
-            );
-          }
-        });
+        _parseTomlString(content);
+      } catch (e) {
+        debugPrint('Ошибка загрузки $path: $e');
       }
-    } catch (e) {
-      debugPrint('Ошибка при сканировании или парсинге TOML: $e');
     }
   }
 
-  /// Загрузка базовой структуры XML
-  void _loadSampleXml() {
+  void _parseTomlString(String content) {
+    try {
+      final parser = TomlDocument.parse(content).toMap();
+      parser.forEach((key, value) {
+        if (value is Map<String, dynamic>) {
+          final name = value['Name']?.toString() ?? key;
+          final desc = value['Description']?.toString() ?? '';
+          _tomlDatabase[key] = ItemMetadata(
+            id: key,
+            name: name,
+            description: desc,
+          );
+        }
+      });
+    } catch (e) {
+      debugPrint('Ошибка парсинга TOML: $e');
+    }
+  }
+
+  void _loadDefaultXml() {
     const rawXml = '''<?xml version="1.0" encoding="utf-8"?>
 <Root>
   <Warriors>
-    <Warrior ID="1" FirstName="NAME_AGONY" Level="8">
+    <Warrior ID="1" FirstName="NAME_AGONY">
       <Items>
         <Item Name="Body" Equipped="1" Count="1"/>
         <Item Name="WEAPON_KNUCKLES" Equipped="1" Count="1" UpgradeLevel="730">
@@ -115,6 +141,85 @@ class _WebHomePageState extends State<WebHomePage> {
     _xmlDocument = XmlDocument.parse(rawXml);
   }
 
+  void _pickAndLoadXml() {
+    final uploadInput = html.FileUploadInputElement()..accept = '.xml';
+    uploadInput.click();
+
+    uploadInput.onChange.listen((event) {
+      final files = uploadInput.files;
+      if (files != null && files.isNotEmpty) {
+        final file = files[0];
+        final reader = html.FileReader();
+
+        reader.onLoadEnd.listen((e) {
+          try {
+            final content = reader.result as String;
+            setState(() {
+              _xmlDocument = XmlDocument.parse(content);
+              _currentFileName = file.name;
+            });
+            _showSnackBar('Файл ${_currentFileName} успешно открыт', Colors.green);
+          } catch (err) {
+            _showSnackBar('Ошибка чтения XML файла', Colors.redAccent);
+          }
+        });
+
+        reader.readAsText(file);
+      }
+    });
+  }
+
+  void _pickAndLoadToml() {
+    final uploadInput = html.FileUploadInputElement()
+      ..accept = '.toml'
+      ..multiple = true;
+    uploadInput.click();
+
+    uploadInput.onChange.listen((event) {
+      final files = uploadInput.files;
+      if (files != null) {
+        for (var file in files) {
+          final reader = html.FileReader();
+          reader.onLoadEnd.listen((e) {
+            final content = reader.result as String;
+            setState(() {
+              _parseTomlString(content);
+            });
+          });
+          reader.readAsText(file);
+        }
+        _showSnackBar('TOML пресеты импортированы', Colors.deepPurpleAccent);
+      }
+    });
+  }
+
+  void _downloadXml() {
+    if (_xmlDocument == null) return;
+
+    final xmlString = _xmlDocument!.toXmlString(pretty: true, indent: '  ');
+    final bytes = utf8.encode(xmlString);
+    final blob = html.Blob([bytes], 'text/xml');
+    final url = html.Url.createObjectUrlFromBlob(blob);
+
+    html.AnchorElement(href: url)
+      ..setAttribute('download', _currentFileName)
+      ..click();
+
+    html.Url.revokeObjectUrl(url);
+    _showSnackBar('Файл $_currentFileName сохранен', Colors.green);
+  }
+
+  void _showSnackBar(String text, Color color) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(text, style: const TextStyle(fontWeight: FontWeight.bold)),
+        backgroundColor: color,
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      ),
+    );
+  }
+
   XmlElement? _getItemsNode() {
     return _xmlDocument
         ?.findAllElements('Warrior')
@@ -126,7 +231,15 @@ class _WebHomePageState extends State<WebHomePage> {
   List<XmlElement> _getXmlItems() {
     final itemsNode = _getItemsNode();
     if (itemsNode == null) return [];
-    return itemsNode.findElements('Item').toList();
+    final allItems = itemsNode.findElements('Item').toList();
+    if (_searchXmlQuery.isEmpty) return allItems;
+
+    return allItems.where((item) {
+      final id = item.getAttribute('Name') ?? '';
+      final name = _tomlDatabase[id]?.name ?? '';
+      return id.toLowerCase().contains(_searchXmlQuery.toLowerCase()) ||
+          name.toLowerCase().contains(_searchXmlQuery.toLowerCase());
+    }).toList();
   }
 
   void _addItem(String id) {
@@ -147,12 +260,14 @@ class _WebHomePageState extends State<WebHomePage> {
     setState(() {
       itemsNode.children.add(newItem);
     });
+    _showSnackBar('Предмет добавлен', Colors.deepPurpleAccent);
   }
 
-    void _removeItem(XmlElement itemNode) {
+  void _removeItem(XmlElement itemNode) {
     setState(() {
       itemNode.remove();
     });
+    _showSnackBar('Предмет удален', Colors.redAccent);
   }
 
   void _addEnchantment(XmlElement itemNode, String perkName) {
@@ -176,65 +291,66 @@ class _WebHomePageState extends State<WebHomePage> {
     setState(() {
       enchantmentsNode!.children.add(perkNode);
     });
+    _showSnackBar('Зачарование добавлено', Colors.amber.shade800);
   }
 
-  void _showAddItemDialog() {
+  void _showSelectionDialog({required String title, required Function(ItemMetadata) onSelect}) {
+    String query = '';
     showDialog(
       context: context,
       builder: (context) {
-        return AlertDialog(
-          title: const Text('Добавить предмет из TOML'),
-          content: SizedBox(
-            width: 400,
-            height: 300,
-            child: _tomlDatabase.isEmpty
-                ? const Center(child: Text('TOML базы пустые (добавьте .toml в assets/toml/)'))
-                : ListView.builder(
-                    itemCount: _tomlDatabase.length,
-                    itemBuilder: (context, index) {
-                      final item = _tomlDatabase.values.elementAt(index);
-                      return ListTile(
-                        title: Text(item.name),
-                        subtitle: Text('${item.id}\n${item.description}'),
-                        onTap: () {
-                          _addItem(item.id);
-                          Navigator.pop(context);
-                        },
-                      );
-                    },
-                  ),
-          ),
-        );
-      },
-    );
-  }
+        return StatefulBuilder(
+          builder: (context, setDialogState) {
+            final filtered = _tomlDatabase.values.where((item) {
+              return item.name.toLowerCase().contains(query.toLowerCase()) ||
+                  item.id.toLowerCase().contains(query.toLowerCase());
+            }).toList();
 
-  void _showAddEnchantmentDialog(XmlElement itemNode) {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: const Text('Добавить зачарование (Perk)'),
-          content: SizedBox(
-            width: 400,
-            height: 300,
-            child: _tomlDatabase.isEmpty
-                ? const Center(child: Text('TOML базы пустые'))
-                : ListView.builder(
-                    itemCount: _tomlDatabase.length,
-                    itemBuilder: (context, index) {
-                      final item = _tomlDatabase.values.elementAt(index);
-                      return ListTile(
-                        title: Text(item.name),
-                        subtitle: Text(item.id),
-                        onTap: () {
-                          _addEnchantment(itemNode, item.id);
-                          Navigator.pop(context);
-                        },
-                      );
-                    },
-                  ),
-          ),
+            return AlertDialog(
+              backgroundColor: const Color(0xFF1E1E28),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+              title: Text(title, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+              content: SizedBox(
+                width: 450,
+                height: 400,
+                child: Column(
+                  children: [
+                    TextField(
+                      decoration: InputDecoration(
+                        hintText: 'Поиск...',
+                        prefixIcon: const Icon(Icons.search, color: Colors.purpleAccent),
+                        filled: true,
+                        fillColor: const Color(0xFF14141D),
+                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
+                      ),
+                      onChanged: (val) => setDialogState(() => query = val),
+                    ),
+                    const SizedBox(height: 12),
+                    Expanded(
+                      child: filtered.isEmpty
+                          ? const Center(child: Text('Ничего не найдено', style: TextStyle(color: Colors.grey)))
+                          : ListView.separated(
+                              itemCount: filtered.length,
+                              separatorBuilder: (_, __) => const Divider(height: 1, color: Colors.white10),
+                              itemBuilder: (context, index) {
+                                final item = filtered[index];
+                                return ListTile(
+                                  hoverColor: Colors.purple.withOpacity(0.15),
+                                  title: Text(item.name, style: const TextStyle(fontWeight: FontWeight.w600)),
+                                  subtitle: Text(item.id, style: const TextStyle(color: Colors.purpleAccent, fontSize: 12)),
+                                  onTap: () {
+                                    onSelect(item);
+                                    Navigator.pop(context);
+                                  },
+                                );
+                              },
+                            ),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
         );
       },
     );
@@ -244,145 +360,318 @@ class _WebHomePageState extends State<WebHomePage> {
   Widget build(BuildContext context) {
     if (_isLoading) {
       return const Scaffold(
-        body: Center(child: CircularProgressIndicator()),
+        body: Center(child: CircularProgressIndicator(color: Colors.deepPurpleAccent)),
       );
     }
 
     final items = _getXmlItems();
+    final filteredToml = _tomlDatabase.values.where((item) {
+      return item.name.toLowerCase().contains(_searchTomlQuery.toLowerCase()) ||
+          item.id.toLowerCase().contains(_searchTomlQuery.toLowerCase());
+    }).toList();
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Saturn Web Panel — XML & TOML Editor'),
-        centerTitle: true,
+        backgroundColor: const Color(0xFF14141C),
+        elevation: 2,
+        title: Row(
+          children: [
+            const Icon(Icons.blur_on, color: Colors.deepPurpleAccent, size: 28),
+            const SizedBox(width: 10),
+            Text('Saturn Studio', style: TextStyle(fontWeight: FontWeight.bold, letterSpacing: 1.1)),
+            const SizedBox(width: 16),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+              decoration: BoxDecoration(
+                color: Colors.white.withOpacity(0.08),
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: Row(
+                children: [
+                  const Icon(Icons.insert_drive_file, size: 14, color: Colors.grey),
+                  const SizedBox(width: 6),
+                  Text(_currentFileName, style: const TextStyle(fontSize: 13, color: Colors.white70)),
+                ],
+              ),
+            ),
+          ],
+        ),
         actions: [
-          IconButton(
-            icon: const Icon(Icons.add_circle_outline),
-            onPressed: _showAddItemDialog,
-            tooltip: 'Добавить предмет',
+          OutlinedButton.icon(
+            icon: const Icon(Icons.folder_open, size: 18),
+            label: const Text('Открыть XML'),
+            style: OutlinedButton.styleFrom(
+              foregroundColor: Colors.purpleAccent,
+              side: const BorderSide(color: Colors.purpleAccent),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+            ),
+            onPressed: _pickAndLoadXml,
           ),
+          const SizedBox(width: 10),
+          ElevatedButton.icon(
+            icon: const Icon(Icons.download, size: 18),
+            label: const Text('Экспорт XML'),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.deepPurpleAccent,
+              foregroundColor: Colors.white,
+              elevation: 3,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+            ),
+            onPressed: _downloadXml,
+          ),
+          const SizedBox(width: 16),
         ],
       ),
-      body: Row(
-        children: [
-          // Список загруженных элементов из TOML
-          Expanded(
-            flex: 1,
-            child: Card(
-              margin: const EdgeInsets.all(8),
-              child: Padding(
-                padding: const EdgeInsets.all(12),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'TOML База (${_tomlDatabase.length})',
-                      style: Theme.of(context).textTheme.titleMedium,
-                    ),
-                    const Divider(),
-                    Expanded(
-                      child: _tomlDatabase.isEmpty
-                          ? const Center(
-                              child: Text(
-                                'Нет файлов в assets/toml/',
-                                textAlign: TextAlign.center,
-                              ),
-                            )
-                          : ListView(
-                              children: _tomlDatabase.values.map((meta) {
-                                return ListTile(
-                                  dense: true,
-                                  title: Text(meta.name),
-                                  subtitle: Text('${meta.id}\n${meta.description}'),
-                                );
-                              }).toList(),
-                            ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-          // Элементы в XML
-          Expanded(
-            flex: 2,
-            child: Card(
-              margin: const EdgeInsets.all(8),
-              child: Padding(
-                padding: const EdgeInsets.all(12),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Предметы в XML (${items.length})',
-                      style: Theme.of(context).textTheme.titleMedium,
-                    ),
-                    const Divider(),
-                    Expanded(
-                      child: ListView.builder(
-                        itemCount: items.length,
-                        itemBuilder: (context, index) {
-                          final itemNode = items[index];
-                          final id = itemNode.getAttribute('Name') ?? '';
-                          final meta = _tomlDatabase[id];
-                          final enchantments = itemNode
-                              .findElements('Enchantments')
-                              .firstOrNull
-                              ?.findElements('Perk')
-                              .toList();
-
-                          return ExpansionTile(
-                            title: Text(meta?.name ?? id),
-                            subtitle: Text(
-                              'ID: $id | Equipped: ${itemNode.getAttribute('Equipped')}',
-                            ),
-                            trailing: IconButton(
-                              icon: const Icon(Icons.delete, color: Colors.redAccent),
-                              onPressed: () => _removeItem(itemNode),
-                            ),
+      body: Padding(
+        padding: const EdgeInsets.all(12.0),
+        child: Row(
+          children: [
+            // ПАНЕЛЬ 1: База TOML
+            Expanded(
+              flex: 2,
+              child: Card(
+                child: Padding(
+                  padding: const EdgeInsets.all(14),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(
                             children: [
-                              Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 16),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    if (enchantments != null && enchantments.isNotEmpty) ...[
-                                      const Text(
-                                        'Зачарования:',
-                                        style: TextStyle(fontWeight: FontWeight.bold),
-                                      ),
-                                      ...enchantments.map((perk) {
-                                        final perkName = perk.getAttribute('Name') ?? '';
-                                        final perkMeta = _tomlDatabase[perkName];
-                                        return ListTile(
-                                          dense: true,
-                                          leading: const Icon(Icons.auto_awesome, size: 16, color: Colors.amber),
-                                          title: Text(perkMeta?.name ?? perkName),
-                                          subtitle: Text('ID: $perkName'),
-                                        );
-                                      }),
-                                    ],
-                                    Align(
-                                      alignment: Alignment.centerRight,
-                                      child: TextButton.icon(
-                                        icon: const Icon(Icons.flash_on, size: 18),
-                                        label: const Text('Добавить зачарование'),
-                                        onPressed: () => _showAddEnchantmentDialog(itemNode),
+                              const Icon(Icons.storage, color: Colors.purpleAccent, size: 20),
+                              const SizedBox(width: 8),
+                              Text('TOML Реестр (${_tomlDatabase.length})',
+                                  style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                            ],
+                          ),
+                          IconButton(
+                            icon: const Icon(Icons.file_upload_outlined, color: Colors.purpleAccent),
+                            tooltip: 'Импортировать .toml файлы',
+                            onPressed: _pickAndLoadToml,
+                          )
+                        ],
+                      ),
+                      const SizedBox(height: 10),
+                      TextField(
+                        decoration: InputDecoration(
+                          hintText: 'Поиск по базе TOML...',
+                          prefixIcon: const Icon(Icons.search, size: 18, color: Colors.grey),
+                          dense: true,
+                          filled: true,
+                          fillColor: const Color(0xFF101016),
+                          border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10), borderSide: BorderSide.none),
+                        ),
+                        onChanged: (val) => setState(() => _searchTomlQuery = val),
+                      ),
+                      const SizedBox(height: 10),
+                      Expanded(
+                        child: filteredToml.isEmpty
+                            ? const Center(child: Text('База пуста или ничего не найдено', style: TextStyle(color: Colors.grey)))
+                            : ListView.builder(
+                                itemCount: filteredToml.length,
+                                itemBuilder: (context, index) {
+                                  final item = filteredToml[index];
+                                  return Card(
+                                    color: const Color(0xFF101017),
+                                    margin: const EdgeInsets.symmetric(vertical: 4),
+                                    child: ListTile(
+                                      dense: true,
+                                      title: Text(item.name, style: const TextStyle(fontWeight: FontWeight.bold)),
+                                      subtitle: Text(item.id, style: const TextStyle(color: Colors.purpleAccent, fontSize: 11)),
+                                      trailing: IconButton(
+                                        icon: const Icon(Icons.add_circle, color: Colors.deepPurpleAccent, size: 22),
+                                        tooltip: 'Добавить в XML',
+                                        onPressed: () => _addItem(item.id),
                                       ),
                                     ),
-                                  ],
-                                ),
+                                  );
+                                },
                               ),
-                            ],
-                          );
-                        },
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ),
-          ),
-        ],
+            const SizedBox(width: 12),
+            // ПАНЕЛЬ 2: XML Инспектор и Редактор
+            Expanded(
+              flex: 3,
+              child: Card(
+                child: Padding(
+                  padding: const EdgeInsets.all(14),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(
+                            children: [
+                              const Icon(Icons.code, color: Colors.amber, size: 20),
+                              const SizedBox(width: 8),
+                              Text('Элементы XML (${items.length})',
+                                  style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                            ],
+                          ),
+                          ElevatedButton.icon(
+                            icon: const Icon(Icons.add, size: 18),
+                            label: const Text('Добавить предмет'),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.purple.shade900,
+                              foregroundColor: Colors.white,
+                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                            ),
+                            onPressed: () => _showSelectionDialog(
+                              title: 'Выберите предмет',
+                              onSelect: (meta) => _addItem(meta.id),
+                            ),
+                          )
+                        ],
+                      ),
+                      const SizedBox(height: 10),
+                      TextField(
+                        decoration: InputDecoration(
+                          hintText: 'Фильтр инвентаря XML...',
+                          prefixIcon: const Icon(Icons.filter_list, size: 18, color: Colors.grey),
+                          dense: true,
+                          filled: true,
+                          fillColor: const Color(0xFF101016),
+                          border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10), borderSide: BorderSide.none),
+                        ),
+                        onChanged: (val) => setState(() => _searchXmlQuery = val),
+                      ),
+                      const SizedBox(height: 10),
+                      Expanded(
+                        child: items.isEmpty
+                            ? const Center(child: Text('Нет предметов в сохранении', style: TextStyle(color: Colors.grey)))
+                            : ListView.builder(
+                                itemCount: items.length,
+                                itemBuilder: (context, index) {
+                                  final itemNode = items[index];
+                                  final id = itemNode.getAttribute('Name') ?? '';
+                                  final isEquipped = itemNode.getAttribute('Equipped') == '1';
+                                  final count = itemNode.getAttribute('Count') ?? '1';
+                                  final meta = _tomlDatabase[id];
+                                  final enchantments = itemNode
+                                      .findElements('Enchantments')
+                                      .firstOrNull
+                                      ?.findElements('Perk')
+                                      .toList();
+
+                                  return Container(
+                                    margin: const EdgeInsets.symmetric(vertical: 4),
+                                    decoration: BoxDecoration(
+                                      color: const Color(0xFF12121A),
+                                      borderRadius: BorderRadius.circular(12),
+                                      border: Border.all(color: Colors.white.withOpacity(0.05)),
+                                    ),
+                                    child: ExpansionTile(
+                                      shape: const Border(),
+                                      leading: Icon(
+                                        isEquipped ? Icons.shield : Icons.inventory_2_outlined,
+                                        color: isEquipped ? Colors.amber : Colors.grey,
+                                      ),
+                                      title: Text(meta?.name ?? id, style: const TextStyle(fontWeight: FontWeight.bold)),
+                                      subtitle: Row(
+                                        children: [
+                                          Text(id, style: TextStyle(color: Colors.white.withOpacity(0.4), fontSize: 11)),
+                                          const SizedBox(width: 8),
+                                          if (isEquipped)
+                                            Container(
+                                              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                                              decoration: BoxDecoration(
+                                                  color: Colors.amber.withOpacity(0.2),
+                                                  borderRadius: BorderRadius.circular(4)),
+                                              child: const Text('EQUIPPED',
+                                                  style: TextStyle(color: Colors.amber, fontSize: 9, fontWeight: FontWeight.bold)),
+                                            ),
+                                        ],
+                                      ),
+                                      trailing: Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          Chip(
+                                            label: Text('x$count', style: const TextStyle(fontSize: 11)),
+                                            backgroundColor: Colors.white.withOpacity(0.05),
+                                            visualDensity: VisualDensity.compact,
+                                          ),
+                                          IconButton(
+                                            icon: const Icon(Icons.delete_outline, color: Colors.redAccent, size: 20),
+                                            onPressed: () => _removeItem(itemNode),
+                                          ),
+                                        ],
+                                      ),
+                                      children: [
+                                        Container(
+                                          padding: const EdgeInsets.all(12),
+                                          color: const Color(0xFF0D0D12),
+                                          child: Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              if (enchantments != null && enchantments.isNotEmpty) ...[
+                                                const Text('Зачарования (Perks):',
+                                                    style: TextStyle(color: Colors.amber, fontSize: 12, fontWeight: FontWeight.bold)),
+                                                const SizedBox(height: 6),
+                                                ...enchantments.map((perk) {
+                                                  final perkName = perk.getAttribute('Name') ?? '';
+                                                  final perkMeta = _tomlDatabase[perkName];
+                                                  return Container(
+                                                    margin: const EdgeInsets.only(bottom: 4),
+                                                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                                                    decoration: BoxDecoration(
+                                                      color: Colors.amber.withOpacity(0.05),
+                                                      borderRadius: BorderRadius.circular(8),
+                                                      border: Border.all(color: Colors.amber.withOpacity(0.2)),
+                                                    ),
+                                                    child: Row(
+                                                      children: [
+                                                        const Icon(Icons.auto_awesome, size: 14, color: Colors.amber),
+                                                        const SizedBox(width: 8),
+                                                        Expanded(
+                                                          child: Text(
+                                                            perkMeta?.name ?? perkName,
+                                                            style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
+                                                          ),
+                                                        ),
+                                                        Text(perkName,
+                                                            style: const TextStyle(color: Colors.grey, fontSize: 10)),
+                                                      ],
+                                                    ),
+                                                  );
+                                                }),
+                                              ],
+                                              Align(
+                                                alignment: Alignment.centerRight,
+                                                child: TextButton.icon(
+                                                  icon: const Icon(Icons.flash_on, size: 16, color: Colors.amber),
+                                                  label: const Text('Зачаровать', style: TextStyle(color: Colors.amber)),
+                                                  onPressed: () => _showSelectionDialog(
+                                                    title: 'Выберите зачарование',
+                                                    onSelect: (meta) => _addEnchantment(itemNode, meta.id),
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                  );
+                                },
+                              ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
