@@ -1,4 +1,4 @@
-Name: Build Stalker APK
+name: Build Stalker APK
 
 on:
   push:
@@ -41,7 +41,6 @@ jobs:
         run: flutter build apk --release --no-shrink --android-skip-build-dependency-validation
 
       - name: Create GitHub Release
-        id: create_release
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ env.VERSION }}
@@ -52,25 +51,3 @@ jobs:
           files: build/app/outputs/flutter-apk/*.apk
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Send Release Notification to Telegram
-        if: success()
-        env:
-          TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
-          TELEGRAM_TO: ${{ secrets.TELEGRAM_TO }}
-        run: |
-          # Находим имя собранного APK файла
-          APK_NAME=$(basename $(find build/app/outputs/flutter-apk -name "*.apk" | head -n 1))
-          
-          # Формируем прямую ссылку на скачивание asset из релиза
-          DOWNLOAD_URL="https://github.com/${{ github.repository }}/releases/download/${{ env.VERSION }}/${APK_NAME}"
-          RELEASE_PAGE="https://github.com/${{ github.repository }}/releases/tag/${{ env.VERSION }}"
-
-          MESSAGE="🚀 *Saturn ${{ env.VERSION }} успешно собран\!*%0A%0A📦 *Файл:* \`${APK_NAME}\`%0A🔗 [Скачать APK](${DOWNLOAD_URL})%0A📑 [Страница релиза](${RELEASE_PAGE})"
-
-          curl -s -X POST "https://api.telegram.org/bot${8906416209:AAFXJjL_ij0dSVRQ1_FF2XWtHsqeJTji7FI}/sendMessage" \
-               -d "chat_id=${5576359465}" \
-               -d "text=${MESSAGE}" \
-               -d "parse_mode=MarkdownV2" \
-               -d "disable_web_page_preview=true"
-               
