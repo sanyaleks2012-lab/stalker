@@ -59,17 +59,18 @@ jobs:
           TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
           TELEGRAM_TO: ${{ secrets.TELEGRAM_TO }}
         run: |
-          # Находим имя собранного APK файла
           APK_NAME=$(basename $(find build/app/outputs/flutter-apk -name "*.apk" | head -n 1))
           
-          # Формируем прямую ссылку на скачивание asset из релиза
           DOWNLOAD_URL="https://github.com/${{ github.repository }}/releases/download/${{ env.VERSION }}/${APK_NAME}"
           RELEASE_PAGE="https://github.com/${{ github.repository }}/releases/tag/${{ env.VERSION }}"
 
-          MESSAGE="🚀 *Saturn ${{ env.VERSION }} успешно собран\!*%0A%0A📦 *Файл:* \`${APK_NAME}\`%0A🔗 [Скачать APK](${DOWNLOAD_URL})%0A📑 [Страница релиза](${RELEASE_PAGE})"
+          MESSAGE="🚀 Saturn ${{ env.VERSION }} успешно собран!
+
+📦 Файл: ${APK_NAME}
+🔗 Скачать APK: ${DOWNLOAD_URL}
+📑 Страница релиза: ${RELEASE_PAGE}"
 
           curl -s -X POST "https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage" \
-               -d "chat_id=${TELEGRAM_TO}" \
-               -d "text=${MESSAGE}" \
-               -d "parse_mode=MarkdownV2" \
-               -d "disable_web_page_preview=true"
+               --data-urlencode "chat_id=${TELEGRAM_TO}" \
+               --data-urlencode "text=${MESSAGE}" \
+               --data-urlencode "disable_web_page_preview=true"
