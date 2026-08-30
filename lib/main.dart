@@ -4,7 +4,9 @@ import 'package:log_plus/log_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:signals/signals_flutter.dart';
 import 'package:saturn/app.dart';
+import 'package:saturn/logic/enchantment.dart';
 import 'package:saturn/logic/item_database.dart';
+import 'package:saturn/logic/records_manager.dart';
 import 'package:saturn/themes.dart';
 
 Logs constructLogger() {
@@ -40,13 +42,22 @@ class _RootAppState extends State<RootApp> {
   @override
   void initState() {
     super.initState();
-    ItemDatabase.load().then((_) {
-      logger.i("Loaded item databse");
-    });
-    ItemDatabase.loadTraits().then((traits) {
-      ItemDatabase.traits = traits.toList();
-      logger.i("Loaded item traits");
-    });
+    _initializeApp();
+  }
+
+  Future<void> _initializeApp() async {
+    await EnchantmentsManager.loadFromFiles();
+    logger.i("Loaded enchantment TOMLs");
+
+    await ItemDatabase.load();
+    logger.i("Loaded item database");
+
+    final traits = await ItemDatabase.loadTraits();
+    ItemDatabase.traits = traits.toList();
+    logger.i("Loaded item traits");
+
+    await RecordsManager.loadRecords();
+    logger.i("Loaded saves from /sdcard/AddNew/saves");
   }
 
   @override

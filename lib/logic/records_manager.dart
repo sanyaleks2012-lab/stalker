@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:saturn/logic/record.dart';
 import 'package:saturn/main.dart';
 import 'package:saturn/shizuku_api.dart';
@@ -13,6 +12,7 @@ class RecordsManager {
   static List<Record> records = [];
   static const userdataPath =
       "/sdcard/Android/data/com.sf2.de/files/userdata";
+  static const externalSavesPath = "/sdcard/AddNew/saves";
 
   static Record? get activeRecord =>
       records.where((e) => e.metadata.isActive == true).firstOrNull;
@@ -29,6 +29,14 @@ class RecordsManager {
     }
   }
 
+  static Future<Directory> _getRecordsDirectory() async {
+    final recordsDirectory = Directory(externalSavesPath);
+    if (!await recordsDirectory.exists()) {
+      await recordsDirectory.create(recursive: true);
+    }
+    return recordsDirectory;
+  }
+
   static Future<void> saveRecord(Record record) async {
     final recordsDirectory = await _getRecordsDirectory();
 
@@ -43,8 +51,8 @@ class RecordsManager {
         File("${recordsDirectory.path}/${record.metadata.uuid}/data.xml");
     final xml = record.xml;
 
-    dataFile.create();
-    dataFile.writeAsString(xml);
+    await dataFile.create(recursive: true);
+    await dataFile.writeAsString(xml);
 
     if (activeRecord == record) {
       await writeFile("$userdataPath/users.xml", xml);
@@ -71,30 +79,54 @@ class RecordsManager {
     return formatted;
   }
 
-  static Future<Directory> _getRecordsDirectory() async {
-    final externalStorage = (await getExternalStorageDirectory())!;
-    final recordsDirectory = Directory("${externalStorage.path}/records");
-
-    await recordsDirectory.create(recursive: true);
-    return recordsDirectory;
-  }
-
   static Future<List<Record>> loadRecords() async {
     final recordsDirectory = await _getRecordsDirectory();
+    List<Directory> folders = recordsDirectory.listSync().whereType<Directory>().toList();
 
-    List<Record> records = [];
-
-    for (final folder in recordsDirectory.listSync().whereType<Directory>()) {
-      final record = await loadRecord(folder.path);
-      records.add(record);
+    // Если в папке /sdcard/AddNew/saves пусто — клонируем существующий сейв из userdata
+    if (folders.isEmpty) {
+      logger.i("Saves directory is empty. Cloning default save from userdata...");
+      await _cloneDefaultUserdataSave(recordsDirectory.path);
+      folders = recordsDirectory.listSync().whereType<Directory>().toList();
     }
 
+    List<Record> loadedRecords = [];
+    for (final folder in folders) {
+      try {
+        final record = await loadRecord(folder.path);
+        loadedRecords.add(record);
+      } catch (e) {
+        logger.e("Failed to load record from ${folder.path}: $e");
+      }
+    }
+
+    records = loadedRecords;
     return records;
+  }
+
+  static Future<void> _cloneDefaultUserdataSave(String baseSavesPath) async {
+    final defaultUuid = "default_save";
+    final defaultFolder = Directory("$baseSavesPath/$defaultUuid");
+    await defaultFolder.create(recursive: true);
+
+    // Копируем файл users.xml через Shizuku/BridgeApi если есть
+    try {
+      await BridgeApi.runCommand("cp $userdataPath/users.xml ${defaultFolder.path}/data.xml");
+    } catch (_) {
+      // Фолбэк чтение/запись
+      final content = await readFile("$userdataPath/users.xml");
+      final dataFile = File("${defaultFolder.path}/data.xml");
+      await dataFile.writeAsString(content);
+    }
+
+    // Создаем метаданные для нового дефолтного профиля
+    final metadata = RecordMetadata("Default Save", defaultUuid, true);
+    final metadataFile = File("${defaultFolder.path}/metadata.toml");
+    await metadataFile.writeAsString(TomlDocument.fromMap(metadata.toMap()).toString());
   }
 
   static Future<RecordMetadata> _loadRecordMetadata(String path) async {
     final metadataFile = File("$path/metadata.toml");
-
     return RecordMetadata.fromMap(
         TomlDocument.parse(await metadataFile.readAsString()).toMap());
   }
@@ -105,7 +137,11 @@ class RecordsManager {
     final dataPath =
         metadata.isActive ? "$userdataPath/users.xml" : "$path/data.xml";
     if (metadata.isActive) {
-      BridgeApi.runCommand("cp $userdataPath/users.xml $path/data.xml");
+      try {
+        await BridgeApi.runCommand("cp $userdataPath/users.xml $path/data.xml");
+      } catch (e) {
+        logger.e("Shizuku cp failed: $e");
+      }
     }
 
     final tree = XmlDocument.parse(await readFile(dataPath));
@@ -118,7 +154,7 @@ class RecordsManager {
     for (final record in records) {
       final metadataFile =
           File("${directory.path}/${record.metadata.uuid}/metadata.toml");
-      await metadataFile.create();
+      await metadataFile.create(recursive: true);
       await metadataFile.writeAsString(
           TomlDocument.fromMap(record.metadata.toMap()).toString());
     }
