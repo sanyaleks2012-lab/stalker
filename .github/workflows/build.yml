@@ -64,11 +64,14 @@ jobs:
           DOWNLOAD_URL="https://github.com/${{ github.repository }}/releases/download/${{ env.VERSION }}/${APK_NAME}"
           RELEASE_PAGE="https://github.com/${{ github.repository }}/releases/tag/${{ env.VERSION }}"
 
-          MESSAGE="🚀 <b>Saturn ${{ env.VERSION }} успешно собран!</b>
+          MESSAGE=$(cat <<EOF
+          🚀 <b>Saturn ${{ env.VERSION }} успешно собран!</b>
 
-📦 <b>Файл:</b> <code>${APK_NAME}</code>
-🔗 <a href=\"${DOWNLOAD_URL}\">Скачать APK</a>
-📑 <a href=\"${RELEASE_PAGE}\">Страница релиза</a>"
+          📦 <b>Файл:</b> <code>${APK_NAME}</code>
+          🔗 <a href="${DOWNLOAD_URL}">Скачать APK</a>
+          📑 <a href="${RELEASE_PAGE}">Страница релиза</a>
+          EOF
+          )
 
           curl -s -X POST "https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage" \
                --data-urlencode "chat_id=${TELEGRAM_TO}" \
