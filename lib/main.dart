@@ -5,7 +5,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:signals/signals_flutter.dart';
 import 'package:saturn/app.dart';
 import 'package:saturn/logic/item_database.dart';
-import 'package:saturn/logic/saf_service.dart';
 import 'package:saturn/themes.dart';
 
 Logs constructLogger() {
@@ -22,7 +21,6 @@ var logger = constructLogger();
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await loadPrefsValues();
-  await SafService.init();
   runApp(const RootApp());
 }
 
