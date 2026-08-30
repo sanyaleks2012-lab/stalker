@@ -1,9 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-
-// Для скачивания и загрузки файлов в Flutter Web без устаревшего dart:html
-import 'package:web/web.dart' as web;
+import 'package:universal_html/html.dart' as html;
 import 'package:toml/toml.dart';
 import 'package:xml/xml.dart';
 
@@ -161,14 +159,14 @@ class _WebHomePageState extends State<WebHomePage> {
   }
 
   void _pickAndLoadXml() {
-    final uploadInput = web.HTMLInputElement()..type = 'file'..accept = '.xml';
+    final uploadInput = html.FileUploadInputElement()..accept = '.xml';
     uploadInput.click();
 
     uploadInput.onChange.listen((event) {
       final files = uploadInput.files;
-      if (files != null && files.length > 0) {
-        final file = files.item(0)!;
-        final reader = web.FileReader();
+      if (files != null && files.isNotEmpty) {
+        final file = files[0];
+        final reader = html.FileReader();
 
         reader.onLoadEnd.listen((e) {
           try {
@@ -177,7 +175,7 @@ class _WebHomePageState extends State<WebHomePage> {
               _xmlDocument = XmlDocument.parse(content);
               _currentFileName = file.name;
             });
-            _showSnackBar('Файл ${_currentFileName} успешно открыт', Colors.green);
+            _showSnackBar('Файл $_currentFileName успешно открыт', Colors.green);
           } catch (err) {
             _showSnackBar('Ошибка чтения XML файла', Colors.redAccent);
           }
@@ -189,8 +187,7 @@ class _WebHomePageState extends State<WebHomePage> {
   }
 
   void _pickAndLoadToml() {
-    final uploadInput = web.HTMLInputElement()
-      ..type = 'file'
+    final uploadInput = html.FileUploadInputElement()
       ..accept = '.toml'
       ..multiple = true;
     uploadInput.click();
@@ -198,9 +195,8 @@ class _WebHomePageState extends State<WebHomePage> {
     uploadInput.onChange.listen((event) {
       final files = uploadInput.files;
       if (files != null) {
-        for (var i = 0; i < files.length; i++) {
-          final file = files.item(i)!;
-          final reader = web.FileReader();
+        for (var file in files) {
+          final reader = html.FileReader();
           reader.onLoadEnd.listen((e) {
             final content = reader.result as String;
             setState(() {
@@ -219,15 +215,14 @@ class _WebHomePageState extends State<WebHomePage> {
 
     final xmlString = _xmlDocument!.toXmlString(pretty: true, indent: '  ');
     final bytes = utf8.encode(xmlString);
-    final blob = web.Blob([bytes.toJS].toJS, web.BlobPropertyBag(type: 'text/xml'));
-    final url = web.URL.createObjectURL(blob);
+    final blob = html.Blob([bytes], 'text/xml');
+    final url = html.Url.createObjectUrlFromBlob(blob);
 
-    final anchor = web.HTMLAnchorElement()
-      ..href = url
-      ..download = _currentFileName;
-    anchor.click();
+    html.AnchorElement(href: url)
+      ..setAttribute('download', _currentFileName)
+      ..click();
 
-    web.URL.revokeObjectURL(url);
+    html.Url.revokeObjectUrl(url);
     _showSnackBar('Файл $_currentFileName сохранен', Colors.green);
   }
 
