@@ -328,9 +328,9 @@ class _WebHomePageState extends State<WebHomePage> {
     _showSnackBar('Предмет удален', Colors.redAccent);
   }
 
-  void _addEnchantment(XmlElement itemNode) {
-    final List<String> perksList = _allPerks.isNotEmpty 
-        ? _allPerks.toList()..sort()
+    void _addEnchantment(XmlElement itemNode) {
+    final List<String> perksList = (_allPerks.isNotEmpty)
+        ? (List.of(_allPerks)..sort())
         : [
             'PERK_ITEM_SPECIAL_LIFESTEAL_WEAPON',
             'PERK_ABSORPTION',
