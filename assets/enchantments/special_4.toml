@@ -1,0 +1,18 @@
+[group]
+id = "special_3"
+displayName = "Special 4"
+color = "0xFAE251AA"
+order = 7
+hasAspect = false
+
+[lightning_chain]
+name = "Rule earthquake"
+id = "PERK_RULE_EARTHQUAKE"
+
+[fear_ray]
+name = "Anti Shock"
+id = "PERK_ANTI_SHOCK"
+
+[power_field]
+name = "Energy volcano"
+id = "PERK_RULE_ENERGY_PILLAR"

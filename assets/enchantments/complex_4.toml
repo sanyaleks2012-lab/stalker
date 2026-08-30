@@ -1,0 +1,32 @@
+[group]
+id = "complex_4"
+displayName = "Complex Elix"
+color = "0xFF441752"
+order = 4
+hasAspect = false
+
+[elix_1]
+name = "Rock"
+id = "PERK_ELIXIR_ROCK"
+
+[Resistance]
+name = "Resistance"
+id = "PERK_ELIXIR_RESISTANCE"
+
+[Lifesteal_bomb]
+name = "Lifesteal bomb"
+id = "PERK_ELIXIR_TIME_BOMB"
+
+[Regeneration]
+name = "Regeneration"
+id = "PERK_ELIXIR_REGENERATION"
+
+
+[Recharge]
+name = "Magic Recharge"
+id = "PERK_ELIXIR_MAGIC_PAIN_RECHARGE"
+
+
+[Dmg_return]
+name = "Damage Return"
+id = "PERK_ELIXIR_DMG_RETURN"
