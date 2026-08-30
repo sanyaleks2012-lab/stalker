@@ -1,6 +1,7 @@
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
 import 'package:log_plus/log_plus.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:signals/signals_flutter.dart';
 import 'package:saturn/app.dart';
@@ -45,19 +46,36 @@ class _RootAppState extends State<RootApp> {
     _initializeApp();
   }
 
+  Future<void> _requestStoragePermissions() async {
+    if (await Permission.manageExternalStorage.isGranted) {
+      return;
+    }
+
+    var status = await Permission.manageExternalStorage.request();
+    if (!status.isGranted) {
+      await Permission.storage.request();
+    }
+  }
+
   Future<void> _initializeApp() async {
-    await EnchantmentsManager.loadFromFiles();
-    logger.i("Loaded enchantment TOMLs");
+    try {
+      await _requestStoragePermissions();
 
-    await ItemDatabase.load();
-    logger.i("Loaded item database");
+      await EnchantmentsManager.loadFromFiles();
+      logger.i("Loaded enchantment TOMLs");
 
-    final traits = await ItemDatabase.loadTraits();
-    ItemDatabase.traits = traits.toList();
-    logger.i("Loaded item traits");
+      await ItemDatabase.load();
+      logger.i("Loaded item database");
 
-    await RecordsManager.loadRecords();
-    logger.i("Loaded saves from /sdcard/AddNew/saves");
+      final traits = await ItemDatabase.loadTraits();
+      ItemDatabase.traits = traits.toList();
+      logger.i("Loaded item traits");
+
+      await RecordsManager.loadRecords();
+      logger.i("Loaded saves from /sdcard/AddNew/saves");
+    } catch (e, stackTrace) {
+      logger.e("Error initializing app: $e\n$stackTrace");
+    }
   }
 
   @override
