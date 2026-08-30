@@ -75,6 +75,7 @@ class _WebHomePageState extends State<WebHomePage> {
   ];
 
   final Map<String, ItemMetadata> _tomlDatabase = {};
+  final Set<String> _allPerks = {};
   XmlDocument? _xmlDocument;
   String _currentFileName = 'users.xml';
   bool _isLoading = true;
@@ -113,15 +114,30 @@ class _WebHomePageState extends State<WebHomePage> {
           final rawName = value['name']?.toString() ?? value['Name']?.toString() ?? '';
           final desc = value['description']?.toString() ?? value['Description']?.toString() ?? '';
 
-          final enchantmentsRaw = value['enchantments'];
-          final enchantments = enchantmentsRaw is List
-              ? enchantmentsRaw.map((e) => e.toString()).toList()
-              : <String>[];
+          final enchantmentsRaw = value['enchantments'] ?? value['Enchantments'];
+          final List<String> enchantments = [];
+          if (enchantmentsRaw is List) {
+            for (var e in enchantmentsRaw) {
+              final str = e.toString().trim().toUpperCase();
+              final formatted = str.startsWith('PERK_') ? str : 'PERK_$str';
+              enchantments.add(formatted);
+              _allPerks.add(formatted);
+            }
+          }
 
-          final traitsRaw = value['traits'];
-          final traits = traitsRaw is List
-              ? traitsRaw.map((e) => e.toString()).toList()
-              : <String>[];
+          final traitsRaw = value['traits'] ?? value['Traits'];
+          final List<String> traits = [];
+          if (traitsRaw is List) {
+            for (var t in traitsRaw) {
+              traits.add(t.toString());
+            }
+          }
+
+          // Если сам ключ или имя начинается с PERK_, добавляем его в общую базу перков тоже
+          final upperKey = key.trim().toUpperCase();
+          if (upperKey.startsWith('PERK_')) {
+            _allPerks.add(upperKey);
+          }
 
           _tomlDatabase[key] = ItemMetadata(
             id: key,
@@ -261,10 +277,7 @@ class _WebHomePageState extends State<WebHomePage> {
 
   String _formatPerkName(String rawPerk) {
     final upper = rawPerk.trim().toUpperCase();
-    if (upper.startsWith('PERK_')) {
-      return upper;
-    }
-    return 'PERK_$upper';
+    return upper.startsWith('PERK_') ? upper : 'PERK_$upper';
   }
 
   void _addItem(String id) {
@@ -286,11 +299,10 @@ class _WebHomePageState extends State<WebHomePage> {
     if (meta != null && meta.enchantments.isNotEmpty) {
       final enchantmentsNode = XmlElement(XmlName('Enchantments'));
       for (final ench in meta.enchantments) {
-        final perkName = _formatPerkName(ench);
         enchantmentsNode.children.add(
           XmlElement(
             XmlName('Perk'),
-            [XmlAttribute(XmlName('Name'), perkName)],
+            [XmlAttribute(XmlName('Name'), ench)],
             [
               XmlElement(
                 XmlName('Set'),
@@ -316,7 +328,78 @@ class _WebHomePageState extends State<WebHomePage> {
     _showSnackBar('Предмет удален', Colors.redAccent);
   }
 
-  void _addEnchantment(XmlElement itemNode, String rawPerkName) {
+  void _addEnchantment(XmlElement itemNode) {
+    final List<String> perksList = _allPerks.isNotEmpty 
+        ? _allPerks.toList()..sort()
+        : [
+            'PERK_ITEM_SPECIAL_LIFESTEAL_WEAPON',
+            'PERK_ABSORPTION',
+            'PERK_REGENERATION',
+            'PERK_TEMPEST',
+            'PERK_BLEED',
+            'PERK_STUN'
+          ];
+
+    String query = '';
+    showDialog(
+      context: context,
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (context, setDialogState) {
+            final filtered = perksList.where((p) => p.toLowerCase().contains(query.toLowerCase())).toList();
+
+            return AlertDialog(
+              backgroundColor: const Color(0xFF1E1E28),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+              title: const Text('Выберите зачарование', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+              content: SizedBox(
+                width: 450,
+                height: 400,
+                child: Column(
+                  children: [
+                    TextField(
+                      decoration: InputDecoration(
+                        hintText: 'Поиск PERK_...',
+                        prefixIcon: const Icon(Icons.search, color: Colors.amber),
+                        isDense: true,
+                        filled: true,
+                        fillColor: const Color(0xFF14141D),
+                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
+                      ),
+                      onChanged: (val) => setDialogState(() => query = val),
+                    ),
+                    const SizedBox(height: 12),
+                    Expanded(
+                      child: filtered.isEmpty
+                          ? const Center(child: Text('Зачарования не найдены', style: TextStyle(color: Colors.grey)))
+                          : ListView.separated(
+                              itemCount: filtered.length,
+                              separatorBuilder: (_, __) => const Divider(height: 1, color: Colors.white10),
+                              itemBuilder: (context, index) {
+                                final perk = filtered[index];
+                                return ListTile(
+                                  hoverColor: Colors.amber.withOpacity(0.15),
+                                  leading: const Icon(Icons.auto_awesome, color: Colors.amber, size: 20),
+                                  title: Text(perk, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: Colors.amberAccent)),
+                                  onTap: () {
+                                    Navigator.pop(context);
+                                    _applyPerkToItem(itemNode, perk);
+                                  },
+                                );
+                              },
+                            ),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+
+  void _applyPerkToItem(XmlElement itemNode, String rawPerkName) {
     var enchantmentsNode = itemNode.findElements('Enchantments').firstOrNull;
     if (enchantmentsNode == null) {
       enchantmentsNode = XmlElement(XmlName('Enchantments'));
@@ -324,7 +407,6 @@ class _WebHomePageState extends State<WebHomePage> {
     }
 
     final perkName = _formatPerkName(rawPerkName);
-
     final perkNode = XmlElement(
       XmlName('Perk'),
       [XmlAttribute(XmlName('Name'), perkName)],
@@ -342,7 +424,7 @@ class _WebHomePageState extends State<WebHomePage> {
     _showSnackBar('Зачарование $perkName добавлено', Colors.amber.shade800);
   }
 
-  void _showSelectionDialog({required String title, required Function(ItemMetadata) onSelect}) {
+  void _showItemSelectionDialog() {
     String query = '';
     showDialog(
       context: context,
@@ -357,7 +439,7 @@ class _WebHomePageState extends State<WebHomePage> {
             return AlertDialog(
               backgroundColor: const Color(0xFF1E1E28),
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-              title: Text(title, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+              title: const Text('Выберите предмет', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
               content: SizedBox(
                 width: 450,
                 height: 400,
@@ -365,7 +447,7 @@ class _WebHomePageState extends State<WebHomePage> {
                   children: [
                     TextField(
                       decoration: InputDecoration(
-                        hintText: 'Поиск...',
+                        hintText: 'Поиск по предметам...',
                         prefixIcon: const Icon(Icons.search, color: Colors.purpleAccent),
                         isDense: true,
                         filled: true,
@@ -388,7 +470,7 @@ class _WebHomePageState extends State<WebHomePage> {
                                   title: Text(item.name, style: const TextStyle(fontWeight: FontWeight.bold)),
                                   subtitle: Text(item.id, style: const TextStyle(color: Colors.purpleAccent, fontSize: 12)),
                                   onTap: () {
-                                    onSelect(item);
+                                    _addItem(item.id);
                                     Navigator.pop(context);
                                   },
                                 );
@@ -524,10 +606,7 @@ class _WebHomePageState extends State<WebHomePage> {
                     padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                   ),
-                  onPressed: () => _showSelectionDialog(
-                    title: 'Выберите предмет',
-                    onSelect: (meta) => _addItem(meta.id),
-                  ),
+                  onPressed: _showItemSelectionDialog,
                 )
               ],
             ),
@@ -647,10 +726,7 @@ class _WebHomePageState extends State<WebHomePage> {
                                       child: TextButton.icon(
                                         icon: const Icon(Icons.flash_on, size: 16, color: Colors.amber),
                                         label: const Text('Зачаровать', style: TextStyle(color: Colors.amber, fontSize: 12)),
-                                        onPressed: () => _showSelectionDialog(
-                                          title: 'Выберите зачарование',
-                                          onSelect: (meta) => _addEnchantment(itemNode, meta.id),
-                                        ),
+                                        onPressed: () => _addEnchantment(itemNode),
                                       ),
                                     ),
                                   ],
