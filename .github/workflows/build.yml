@@ -1,4 +1,4 @@
-Name: Build Stalker APK
+name: Build Stalker APK
 
 on:
   push:
