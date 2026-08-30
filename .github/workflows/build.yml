@@ -1,4 +1,4 @@
-name: Build Stalker APK
+Name: Build Stalker APK
 
 on:
   push:
@@ -68,9 +68,8 @@ jobs:
 
           MESSAGE="🚀 *Saturn ${{ env.VERSION }} успешно собран\!*%0A%0A📦 *Файл:* \`${APK_NAME}\`%0A🔗 [Скачать APK](${DOWNLOAD_URL})%0A📑 [Страница релиза](${RELEASE_PAGE})"
 
-          curl -s -X POST "https://api.telegram.org/bot${8906416209:AAFXJjL_ij0dSVRQ1_FF2XWtHsqeJTji7FI}/sendMessage" \
-               -d "chat_id=${5576359465}" \
+          curl -s -X POST "https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage" \
+               -d "chat_id=${TELEGRAM_TO}" \
                -d "text=${MESSAGE}" \
                -d "parse_mode=MarkdownV2" \
                -d "disable_web_page_preview=true"
-               
