@@ -1,3 +1,5 @@
+![Saturn Banner](img/barrier.png)
+
 # Saturn – Shadow Fight 2 Save Viewer & Modifier
 
 **Saturn** is an Android utility application (a fork of [Stalker](https://github.com/onerdna/stalker)) designed to **view and optionally modify save files** for the mobile game **Shadow Fight 2** (including support for **Shadow Fight 2: Definitive Edition 64** by seby7113).
