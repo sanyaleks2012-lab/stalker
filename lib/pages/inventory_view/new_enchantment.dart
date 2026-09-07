@@ -1,18 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:saturn/ui/click_tooltip.dart';
-import 'package:saturn/logic/enchantment.dart';
-import 'package:saturn/logic/equipment_type.dart';
+import 'package:detool64/ui/click_tooltip.dart';
+import 'package:detool64/logic/enchantment.dart';
+import 'package:detool64/logic/equipment_type.dart';
 
 class NewEnchantmentDialog extends StatefulWidget {
   final List<Enchantment> enchantments;
   final EquipmentType type;
-  final String equipmentId;
   final void Function(Enchantment, int) onPressed;
 
   const NewEnchantmentDialog(
       {required this.enchantments,
       required this.type,
-      required this.equipmentId,
       required this.onPressed,
       super.key});
 
@@ -25,12 +23,8 @@ class _NewEnchantmentDialogState extends State<NewEnchantmentDialog> {
 
   @override
   Widget build(BuildContext context) {
-    final bool isSkeleton = widget.equipmentId.toLowerCase() == "skeleton";
-
     return AlertDialog(
-      title: Center(
-        child: Text(isSkeleton ? "Add enchantment (Skeleton)" : "Add an enchantment"),
-      ),
+      title: const Center(child: Text("Add an enchantment")),
       content: SizedBox(
         width: double.maxFinite,
         height: double.maxFinite,
@@ -95,8 +89,7 @@ class _NewEnchantmentDialogState extends State<NewEnchantmentDialog> {
                     ),
                     ...EnchantmentsManager.enchantments
                         .where((e) =>
-                            (isSkeleton || e.idFor(widget.type) != null) &&
-                            e.group == group)
+                            e.idFor(widget.type) != null && e.group == group)
                         .map((ench) => Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [

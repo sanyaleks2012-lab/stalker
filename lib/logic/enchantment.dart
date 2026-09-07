@@ -1,7 +1,5 @@
-import 'dart:io';
 import 'package:flutter/services.dart';
-import 'package:saturn/logic/equipment_type.dart';
-import 'package:saturn/main.dart';
+import 'package:detool64/logic/equipment_type.dart';
 import 'package:toml/toml.dart';
 import 'package:xml/xml.dart';
 
@@ -69,61 +67,25 @@ class EnchantmentsManager {
   static List<Enchantment> enchantments = [];
   static List<EnchantmentGroup> groups = [];
 
-  static const String externalPerksPath = "/sdcard/Saturn/perk";
-
   static Future<void> loadFromFiles() async {
     enchantments.clear();
     groups.clear();
-
-    final targetDir = Directory(externalPerksPath);
-    if (!await targetDir.exists()) {
-      await targetDir.create(recursive: true);
+    final assets =
+        (await AssetManifest.loadFromAssetBundle(rootBundle)).listAssets();
+    for (final file in assets
+        .where((key) => key.startsWith("assets/enchantments"))
+        .toList()) {
+      final tomlString = await rootBundle.loadString(file);
+      final tomlMap = TomlDocument.parse(tomlString).toMap();
+      final group = EnchantmentGroup.fromToml(tomlMap["group"]);
+      tomlMap.remove("group");
+      groups.add(group);
+      enchantments.addAll(tomlMap.entries.map((e) {
+        final data = e.value as Map<String, dynamic>;
+        return Enchantment.fromToml(MapEntry(e.key, data), group);
+      }));
+      groups.sort((a, b) => a.order.compareTo(b.order));
     }
-
-    List<FileSystemEntity> tomlFiles = targetDir
-        .listSync()
-        .where((e) => e is File && e.path.endsWith('.toml'))
-        .toList();
-
-    if (tomlFiles.isEmpty) {
-      logger.i("Perk directory is empty. Copying defaults from assets...");
-      final manifest = await AssetManifest.loadFromAssetBundle(rootBundle);
-      final assetPaths = manifest
-          .listAssets()
-          .where((key) =>
-              key.startsWith("assets/enchantments") && key.endsWith(".toml"))
-          .toList();
-
-      for (final assetPath in assetPaths) {
-        final content = await rootBundle.loadString(assetPath);
-        final fileName = assetPath.split('/').last;
-        final newFile = File("${targetDir.path}/$fileName");
-        await newFile.writeAsString(content);
-      }
-
-      tomlFiles = targetDir
-          .listSync()
-          .where((e) => e is File && e.path.endsWith('.toml'))
-          .toList();
-    }
-
-    for (final file in tomlFiles.whereType<File>()) {
-      try {
-        final tomlString = await file.readAsString();
-        final tomlMap = TomlDocument.parse(tomlString).toMap();
-        final group = EnchantmentGroup.fromToml(tomlMap["group"]);
-        tomlMap.remove("group");
-        groups.add(group);
-        enchantments.addAll(tomlMap.entries.map((e) {
-          final data = e.value as Map<String, dynamic>;
-          return Enchantment.fromToml(MapEntry(e.key, data), group);
-        }));
-      } catch (e) {
-        logger.e("Error parsing perk file ${file.path}: $e");
-      }
-    }
-
-    groups.sort((a, b) => a.order.compareTo(b.order));
   }
 
   static Enchantment? findByEquipmentTypeId(EquipmentType type, String id) {
@@ -147,9 +109,9 @@ class AppliedEnchantment {
   AppliedEnchantment(this.enchantment, this.aspect);
 
   XmlElement toXml(EquipmentType type) {
-    final id = enchantment.idFor(type) ?? enchantment.ids.values.firstOrNull;
+    final id = enchantment.idFor(type);
     if (id == null) {
-      throw ArgumentError('Enchantment has no valid IDs available');
+      throw ArgumentError('Enchantment not applicable to $type');
     }
 
     return XmlElement(
