@@ -6,16 +6,15 @@ import 'package:saturn/logic/equipment_type.dart';
 class NewEnchantmentDialog extends StatefulWidget {
   final List<Enchantment> enchantments;
   final EquipmentType type;
-  final String equipmentId; // ID предмета для проверки
+  final String equipmentId;
   final void Function(Enchantment, int) onPressed;
 
-  const NewEnchantmentDialog({
-    required this.enchantments,
-    required this.type,
-    required this.equipmentId,
-    required this.onPressed,
-    super.key,
-  });
+  const NewEnchantmentDialog(
+      {required this.enchantments,
+      required this.type,
+      required this.equipmentId,
+      required this.onPressed,
+      super.key});
 
   @override
   State<NewEnchantmentDialog> createState() => _NewEnchantmentDialogState();
@@ -26,23 +25,19 @@ class _NewEnchantmentDialogState extends State<NewEnchantmentDialog> {
 
   @override
   Widget build(BuildContext context) {
-    // Разрешаем абсолютно все чары ТОЛЬКО если id предмета строго равен "skeleton"
     final bool isSkeleton = widget.equipmentId.toLowerCase() == "skeleton";
 
     return AlertDialog(
-      title: Text(
-        isSkeleton ? "Add ANY enchantment (Skeleton)" : "Add an enchantment",
-        textAlign: TextAlign.center,
+      title: Center(
+        child: Text(isSkeleton ? "Add enchantment (Skeleton)" : "Add an enchantment"),
       ),
       content: SizedBox(
         width: double.maxFinite,
         height: double.maxFinite,
         child: ListView(children: [
-          Text(
-            "Amount: $amountSliderValue",
-            style: Theme.of(context).textTheme.bodyLarge,
-            textAlign: TextAlign.center,
-          ),
+          Text("Amount: $amountSliderValue",
+              style: Theme.of(context).textTheme.bodyLarge,
+              textAlign: TextAlign.center),
           LayoutBuilder(
             builder: (ctx, constaints) {
               return Row(spacing: 0, children: [
@@ -57,8 +52,8 @@ class _NewEnchantmentDialogState extends State<NewEnchantmentDialog> {
                       tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                       minimumSize: Size(constaints.maxWidth * 0.15, 64)),
                   child: const Text("-",
-                      style: TextStyle(
-                          fontWeight: FontWeight.w700, fontSize: 24)),
+                      style:
+                          TextStyle(fontWeight: FontWeight.w700, fontSize: 24)),
                 ),
                 SizedBox(
                   width: constaints.maxWidth * 0.7,
@@ -84,8 +79,8 @@ class _NewEnchantmentDialogState extends State<NewEnchantmentDialog> {
                       tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                       minimumSize: Size(constaints.maxWidth * 0.15, 64)),
                   child: const Text("+",
-                      style: TextStyle(
-                          fontWeight: FontWeight.w700, fontSize: 24)),
+                      style:
+                          TextStyle(fontWeight: FontWeight.w700, fontSize: 24)),
                 )
               ]);
             },
@@ -100,8 +95,6 @@ class _NewEnchantmentDialogState extends State<NewEnchantmentDialog> {
                     ),
                     ...EnchantmentsManager.enchantments
                         .where((e) =>
-                            // Для Skeleton показываем ВСЕ чары группы.
-                            // Для остальных предметов — только поддерживаемые этим типом.
                             (isSkeleton || e.idFor(widget.type) != null) &&
                             e.group == group)
                         .map((ench) => Row(
@@ -114,7 +107,9 @@ class _NewEnchantmentDialogState extends State<NewEnchantmentDialog> {
                                       child: Text(ench.name)),
                                 ),
                                 if (ench.description != null) ...[
-                                  const SizedBox(width: 8),
+                                  const SizedBox(
+                                    width: 8,
+                                  ),
                                   ClickTooltip(
                                     message: ench.description,
                                     decoration: BoxDecoration(

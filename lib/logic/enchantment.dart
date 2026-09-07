@@ -80,19 +80,18 @@ class EnchantmentsManager {
       await targetDir.create(recursive: true);
     }
 
-    // Проверяем наличие .toml файлов в /sdcard/AddNew/perk
     List<FileSystemEntity> tomlFiles = targetDir
         .listSync()
         .where((e) => e is File && e.path.endsWith('.toml'))
         .toList();
 
-    // Если папка пуста — копируем из ассетов
     if (tomlFiles.isEmpty) {
       logger.i("Perk directory is empty. Copying defaults from assets...");
       final manifest = await AssetManifest.loadFromAssetBundle(rootBundle);
       final assetPaths = manifest
           .listAssets()
-          .where((key) => key.startsWith("assets/enchantments") && key.endsWith(".toml"))
+          .where((key) =>
+              key.startsWith("assets/enchantments") && key.endsWith(".toml"))
           .toList();
 
       for (final assetPath in assetPaths) {
@@ -108,7 +107,6 @@ class EnchantmentsManager {
           .toList();
     }
 
-    // Парсим все скопированные/существующие TOML файлы
     for (final file in tomlFiles.whereType<File>()) {
       try {
         final tomlString = await file.readAsString();
@@ -149,20 +147,20 @@ class AppliedEnchantment {
   AppliedEnchantment(this.enchantment, this.aspect);
 
   XmlElement toXml(EquipmentType type) {
-  // Если для текущего типа нет прямых чар, берём первый доступный ID из этой чары
-  final id = enchantment.idFor(type) ?? enchantment.ids.values.firstOrNull;
-  if (id == null) {
-    throw ArgumentError('Enchantment has no valid IDs available');
-  }
+    final id = enchantment.idFor(type) ?? enchantment.ids.values.firstOrNull;
+    if (id == null) {
+      throw ArgumentError('Enchantment has no valid IDs available');
+    }
 
-  return XmlElement(
-    XmlName("Perk"),
-    [XmlAttribute(XmlName("Name"), id)],
-    aspect == null
-        ? []
-        : [
-            XmlElement(XmlName("Set"),
-                [XmlAttribute(XmlName("Aspect"), aspect.toString())])
-          ],
-  );
+    return XmlElement(
+      XmlName("Perk"),
+      [XmlAttribute(XmlName("Name"), id)],
+      aspect == null
+          ? []
+          : [
+              XmlElement(XmlName("Set"),
+                  [XmlAttribute(XmlName("Aspect"), aspect.toString())])
+            ],
+    );
+  }
 }
