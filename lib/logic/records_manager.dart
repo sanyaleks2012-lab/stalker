@@ -12,7 +12,7 @@ class RecordsManager {
   static List<Record> records = [];
   static const userdataPath =
       "/sdcard/Android/data/com.sf2.de/files/userdata";
-  static const externalSavesPath = "/sdcard/AddNew/saves";
+  static const externalSavesPath = "/sdcard/Saturn/saves";
 
   static Record? get activeRecord =>
       records.where((e) => e.metadata.isActive == true).firstOrNull;

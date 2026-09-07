@@ -69,7 +69,7 @@ class EnchantmentsManager {
   static List<Enchantment> enchantments = [];
   static List<EnchantmentGroup> groups = [];
 
-  static const String externalPerksPath = "/sdcard/AddNew/perk";
+  static const String externalPerksPath = "/sdcard/Saturn/perk";
 
   static Future<void> loadFromFiles() async {
     enchantments.clear();

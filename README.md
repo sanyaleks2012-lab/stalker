@@ -1,4 +1,8 @@
 ![Saturn Banner](img/barrier.png)
+[![License](https://img.shields.io/github/license/username/repository)](./LICENSE)
+[![Latest Release](https://img.shields.io/github/v/release/username/repository)](https://github.com/username/repository/releases)
+[![Shizuku Required](https://img.shields.io/badge/Requires-Shizuku-blue)](https://shizuku.rikka.app/)
+
 
 # Saturn – Shadow Fight 2 Save Viewer & Modifier
 
@@ -10,7 +14,7 @@
 
 ## 🔍 What It Does
 
-Saturn allows users to inspect and optionally tweak various aspects of their Shadow Fight 2 game progress by interacting with local save files.
+Saturn allows users to inspect and optionally tweak various aspects of their Shadow Fight 2 game progress by interacting with local save files 
 
 ### 🔧 Features
 
@@ -37,13 +41,13 @@ Saturn allows users to inspect and optionally tweak various aspects of their Sha
 
 Saturn features an open system for enchantment lists using **TOML** configurations, as well as external storage for save records.
 
-### 📜 TOML Enchantment Lists (`/sdcard/AddNew/perk`)
+### 📜 TOML Enchantment Lists (`/sdcard/Saturn/perk`)
 The app automatically extracts and manages enchantment TOML files inside your device's external storage directory:
-`/sdcard/AddNew/perk/`
+`/sdcard/Saturn/perk/`
 
 You can edit these `.toml` files directly to customize or add new enchantment properties.
 
-**If the `/sdcard/AddNew/perk` directory is empty or missing, check the following:**
+**If the `/sdcard/Saturn/perk` directory is empty or missing, check the following:**
 1. **First Launch:** The app generates these files automatically on start. Make sure you have launched the application at least once.
 2. **Storage Permissions:** Ensure Saturn has been granted permission to write to external storage (Storage / All Files Access permissions).
 
@@ -58,18 +62,6 @@ Save slots and backups created within Saturn are also stored directly on externa
 2. Install and configure [Shizuku](https://shizuku.rikka.app/).
 3. Start the Shizuku service if it is not already running.
 4. Launch **Saturn** and grant the required Shizuku and Storage permissions.
-5. Proceed to the additional setup step:
-   - Ensure the game is completely closed.
-   - Minimize Saturn (do **not** fully close it).
-   - Launch Shadow Fight 2 and wait until it fully loads into the main menu.
-   - Close the game completely.
-   - Return to Saturn and tap the **Reinitialize** button.
-
-### ❗ Usage Rules
-- **Always close the game completely** before making changes in the app.
-- Tap **Save** after making edits for them to take effect.
-
----
 
 ## ❓ FAQ
 
@@ -77,11 +69,6 @@ Save slots and backups created within Saturn are also stored directly on externa
   - No.
 - **Why does the app use Shizuku?**
   - Shizuku is required to access internal game save files that are protected by Android system permissions, as well as to execute the setup service binary.
-- **Can you add verified gems, raid consumables, or a damage hack?**
-  - No.
-- **What does the setup service actually do?**
-  - The setup service’s only purpose is to modify your user ID inside the game’s runtime process. It automatically terminates once completed (or after 2 minutes of inactivity). The user ID is a random device-specific string containing no personal data.
-
 ---
 
 ## 🔧 Troubleshooting
