@@ -1,8 +1,6 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:saturn/app.dart';
 import 'package:saturn/ui/click_tooltip.dart';
 import 'package:saturn/ui/confirm_button.dart';
 import 'package:saturn/logic/enchantment.dart';
@@ -415,6 +413,7 @@ class _InventoryViewState extends State<InventoryView> {
                                     enchantments:
                                         EnchantmentsManager.enchantments,
                                     type: widget.equipmentType,
+                                    equipmentId: item.id,
                                     onPressed: (selected, amount) {
                                       setState(() {
                                         for (var i = 0; i < amount; i++) {
@@ -494,304 +493,59 @@ class _InventoryViewState extends State<InventoryView> {
                                   onPressed: () {
                                     setState(() {});
                                   },
-                                  icon: const Icon(Icons.replay)),
+                                  icon: const Icon(Icons.refresh)),
                             )
                           ],
-                        ),
-                        FilledButton.icon(
-                          onPressed: () {
-                            setState(() {
-                              item.recipeDelivery!.time = DateTime.now();
-                              Fluttertoast.showToast(msg: "Meido In Hebun!");
-                            });
-                          },
-                          label: const Text("Skip"),
-                          icon: const Icon(Icons.fast_forward),
                         )
-                      ] else
-                        Row(
-                          spacing: 4,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            const Icon(Icons.check, color: Colors.green),
-                            Text("Already Done",
-                                style: theme.textTheme.titleMedium),
-                          ],
-                        )
+                      ]
                     ]),
                   ),
                 ),
               ),
-            )
-          ],
-          if (item.upgradeDelivery != null) ...[
-            Divider(
-              color: theme.colorScheme.surfaceContainer,
-              thickness: 1,
             ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(16),
-                child: Container(
-                  color: theme.colorScheme.surfaceContainerLow,
-                  child: Padding(
-                    padding: const EdgeInsets.all(24.0),
-                    child: Column(spacing: 8, children: [
-                      Row(
-                        spacing: 16,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          IconButton(
-                              onPressed: () {
-                                setState(() {
-                                  item.upgradeDelivery = null;
-                                });
-                              },
-                              icon: const Icon(Icons.delete)),
-                          Align(
-                            alignment: Alignment.center,
-                            child: Text(
-                              "Upgrade in progress",
-                              style: theme.textTheme.titleLarge,
-                            ),
-                          ),
-                        ],
-                      ),
-                      if (item.upgradeDelivery!.level != item.level)
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          spacing: 4,
-                          children: [
-                            Text("Level: ${item.level}",
-                                style: theme.textTheme.bodyLarge),
-                            const Icon(Icons.arrow_right_alt),
-                            Text("${item.upgradeDelivery!.level}",
-                                style: theme.textTheme.bodyLarge)
-                          ],
-                        ),
-                      if (item.upgradeDelivery!.upgrade != item.upgrade &&
-                          item.upgrade != 0)
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          spacing: 4,
-                          children: [
-                            Text("Upgrade level: ${item.upgrade}",
-                                style: theme.textTheme.bodyLarge),
-                            const Icon(Icons.arrow_right_alt),
-                            Text("${item.upgradeDelivery!.upgrade}",
-                                style: theme.textTheme.bodyLarge)
-                          ],
-                        ),
-                      Text(
-                        "Finishes: ${item.upgradeDelivery!.time.toString()}",
-                        style: theme.textTheme.bodyLarge,
-                      ),
-                      if (item.upgradeDelivery!.time
-                          .isAfter(DateTime.now())) ...[
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                                "Time left: ${item.upgradeDelivery!.time.difference(DateTime.now())}",
-                                style: theme.textTheme.bodyLarge),
-                            Padding(
-                              padding: const EdgeInsets.only(bottom: 4.0),
-                              child: IconButton(
-                                  onPressed: () {
-                                    setState(() {});
-                                  },
-                                  icon: const Icon(Icons.replay)),
-                            )
-                          ],
-                        ),
-                        FilledButton.icon(
-                          onPressed: () {
-                            setState(() {
-                              item.upgradeDelivery!.time = DateTime.now();
-                              Fluttertoast.showToast(msg: "Meido In Hebun!");
-                            });
-                          },
-                          label: const Text("Skip"),
-                          icon: const Icon(Icons.fast_forward),
-                        )
-                      ] else
-                        Row(
-                          spacing: 4,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            const Icon(Icons.check, color: Colors.green),
-                            Text("Already Done",
-                                style: theme.textTheme.titleMedium),
-                          ],
-                        )
-                    ]),
-                  ),
-                ),
-              ),
-            )
-          ],
-          Divider(
-            color: theme.colorScheme.surfaceContainer,
-            thickness: 1,
-          ),
-          Padding(
-            padding: const EdgeInsets.only(left: 16.0),
-            child: ListTile(
-              title: Row(
-                children: [
-                  Text("Level: ${item.level}"),
-                  Slider(
-                    value: item.level.toDouble(),
-                    onChanged: (n) {
-                      setState(() => item.level = n.toInt());
-                    },
-                    min: Equipment.minLevel.toDouble(),
-                    max: Equipment.maxLevel.toDouble(),
-                    divisions: Equipment.maxLevel - Equipment.minLevel,
-                  ),
-                ],
-              ),
-              subtitle: Row(
-                children: [
-                  Text(
-                      "Upgrade level: ${item.upgrade == 0 ? "Not upgraded" : item.upgrade}"),
-                  Expanded(
-                    child: Slider(
-                      value: item.upgrade.toDouble(),
-                      onChanged: (n) {
-                        setState(() => item.upgrade = n.toInt());
-                      },
-                      min: Equipment.minUpgrade.toDouble(),
-                      max: Equipment.maxUpgrade.toDouble(),
-                      divisions: Equipment.maxUpgrade - Equipment.minUpgrade,
-                    ),
-                  ),
-                  const SizedBox(width: 40),
-                ],
-              ),
-            ),
-          )
+          ]
         ],
       );
     });
   }
 
   Iterable<Widget> _generateSuggestedEntries() {
-    return suggestedEquipment.map((e) {
-      final enchantments = ItemDatabase.getEnchantments(e).map((ench) =>
-          DecoratedBox(
-              decoration: BoxDecoration(
-                  border: Border.all(width: 2, color: Color(ench.group.color)),
-                  borderRadius: BorderRadius.circular(16)),
-              child: Padding(
-                padding: const EdgeInsets.only(
-                    top: 4.0, bottom: 4, right: 12, left: 12),
-                child: Text(
-                  ench.name,
-                  style: const TextStyle(fontSize: 15),
-                ),
-              )));
-      final description = ItemDatabase.getDescription(e);
-
-      return InventoryTile(
-        title: Row(
-          spacing: 8,
-          children: [
-            InkResponse(
-              onTap: () {
-                final record = RecordsManager.activeRecord!;
-                final equipment =
-                    Equipment(widget.equipmentType, e, record.level, 0);
-                equipment.enchantments = ItemDatabase.getEnchantments(e)
-                    .map((ench) =>
-                        AppliedEnchantment(ench, AppliedEnchantment.maxAspect))
-                    .toList();
-                setState(() {
-                  record.equipment[widget.equipmentType]!.add(equipment);
-                  _searchEquipment(query);
-                });
-              },
-              radius: 16,
-              containedInkWell: true,
-              child: const Icon(Icons.add, size: 32),
-            ),
-            Text(ItemDatabase.getName(e)),
-          ],
-        ),
-        subtitle: Column(
-          children: [
-            Align(
-                alignment: Alignment.centerLeft,
-                child: Text(e, style: const TextStyle(fontSize: 13))),
-            const SizedBox(
-              height: 12,
-            ),
-            _generateTraitsFor(e)
-          ],
-        ),
-        children: [
-          if (description.isNotEmpty)
-            Padding(
-              padding: const EdgeInsets.only(
-                  top: 8, bottom: 16, left: 16, right: 16),
-              child: ClipRRect(
-                borderRadius: const BorderRadius.only(
-                    topLeft: Radius.circular(16),
-                    topRight: Radius.circular(16),
-                    bottomLeft: Radius.circular(4),
-                    bottomRight: Radius.circular(4)),
-                child: Container(
-                    color: Theme.of(context).colorScheme.surfaceContainerLow,
-                    child: Padding(
-                      padding: const EdgeInsets.all(12.0),
-                      child: Text(description),
-                    )),
-              ),
-            ),
-          if (enchantments.isNotEmpty) ...[
-            const Align(
-              alignment: Alignment.center,
-              child: Text(
-                "Enchantments: ",
-                style: TextStyle(fontSize: 17),
-              ),
-            ),
-            Padding(
-              padding:
-                  const EdgeInsets.only(top: 8, bottom: 24, left: 8, right: 8),
-              child: Center(
-                child: Wrap(
-                  alignment: WrapAlignment.center,
-                  spacing: 8,
-                  runSpacing: 8,
-                  children: enchantments.toList(),
-                ),
-              ),
-            )
-          ],
-        ],
-      );
-    });
+    return suggestedEquipment.map((id) => ListTile(
+          title: Text(ItemDatabase.getName(id)),
+          subtitle: Text(id),
+          trailing: IconButton(
+            icon: const Icon(Icons.add),
+            onPressed: () {
+              final newItem = Equipment(widget.equipmentType, id, 1, 0);
+              setState(() {
+                ownedEquipment.add(newItem);
+                _searchEquipment(query);
+              });
+            },
+          ),
+        ));
   }
 
   void _searchEquipment(String text) {
-    foundEquipment = ownedEquipment
-        .where((e) =>
-            e.id.toLowerCase().contains(text) ||
-            e.name.toLowerCase().contains(text) ||
-            ItemDatabase.getDescription(e.id).toLowerCase().contains(text) ||
-            ItemDatabase.getTraits(e.id)
-                .where((t) =>
-                    t.display.toLowerCase().contains(text) ||
-                    t.id.toLowerCase().contains(text))
-                .isNotEmpty ||
-            ("equipped".contains(text) &&
-                RecordsManager.activeRecord!.isEquipped(e)))
-        .toList();
+    if (text.isEmpty) {
+      foundEquipment = List.from(ownedEquipment);
+    } else {
+      foundEquipment = ownedEquipment
+          .where((e) =>
+              e.id.toLowerCase().contains(text) ||
+              e.name.toLowerCase().contains(text) ||
+              e.description.toLowerCase().contains(text) ||
+              ItemDatabase.getTraits(e.id)
+                  .where((t) =>
+                      t.display.toLowerCase().contains(text) ||
+                      t.id.toLowerCase().contains(text))
+                  .isNotEmpty ||
+              (text == "equipped" && RecordsManager.activeRecord!.isEquipped(e)))
+          .toList();
+    }
 
-    final equipped = foundEquipment
-        .indexWhere((item) => RecordsManager.activeRecord!.isEquipped(item));
+    final equipped = foundEquipment.indexWhere(
+        (e) => RecordsManager.activeRecord!.isEquipped(e));
 
     if (equipped != -1) {
       final equippedItem = foundEquipment.removeAt(equipped);
@@ -839,4 +593,29 @@ class _InventoryViewState extends State<InventoryView> {
       ),
     );
   }
+}
+
+void showConfirmationDialog(
+  Widget title,
+  Widget content,
+  BuildContext context,
+  void Function(BuildContext) onConfirmed,
+) {
+  showDialog(
+    context: context,
+    builder: (ctx) => AlertDialog(
+      title: title,
+      content: content,
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.of(ctx).pop(),
+          child: const Text("Cancel"),
+        ),
+        TextButton(
+          onPressed: () => onConfirmed(ctx),
+          child: const Text("Confirm"),
+        ),
+      ],
+    ),
+  );
 }
