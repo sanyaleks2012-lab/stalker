@@ -149,20 +149,20 @@ class AppliedEnchantment {
   AppliedEnchantment(this.enchantment, this.aspect);
 
   XmlElement toXml(EquipmentType type) {
-    final id = enchantment.idFor(type);
-    if (id == null) {
-      throw ArgumentError('Enchantment not applicable to $type');
-    }
-
-    return XmlElement(
-      XmlName("Perk"),
-      [XmlAttribute(XmlName("Name"), id)],
-      aspect == null
-          ? []
-          : [
-              XmlElement(XmlName("Set"),
-                  [XmlAttribute(XmlName("Aspect"), aspect.toString())])
-            ],
-    );
+  // Если для текущего типа нет прямых чар, берём первый доступный ID из этой чары
+  final id = enchantment.idFor(type) ?? enchantment.ids.values.firstOrNull;
+  if (id == null) {
+    throw ArgumentError('Enchantment has no valid IDs available');
   }
+
+  return XmlElement(
+    XmlName("Perk"),
+    [XmlAttribute(XmlName("Name"), id)],
+    aspect == null
+        ? []
+        : [
+            XmlElement(XmlName("Set"),
+                [XmlAttribute(XmlName("Aspect"), aspect.toString())])
+          ],
+  );
 }
