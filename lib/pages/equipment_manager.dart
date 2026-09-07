@@ -1,4 +1,4 @@
-Import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:saturn/logic/enchantment.dart';
 import 'package:saturn/logic/equipment.dart';
 import 'package:saturn/logic/equipment_type.dart';
