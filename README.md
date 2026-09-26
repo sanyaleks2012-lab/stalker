@@ -1,6 +1,6 @@
 ![Saturn Banner](img/barrier.png)
 [![License](https://img.shields.io/github/license/sanyaleks2012-lab/stalker)](./LICENSE)
-[![Latest Release](https://img.shields.io/github/v/release/sanyaleks2012-lab/stalker)](https://github.com/username/repository/releases)
+[![Latest Release](https://img.shields.io/github/v/release/sanyaleks2012-lab/stalker)](https://github.com/sanyaleks2012-lab/stalker/releases)
 [![Shizuku Required](https://img.shields.io/badge/Requires-Shizuku-blue)](https://shizuku.rikka.app/)
 
 
