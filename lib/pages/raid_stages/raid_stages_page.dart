@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:saturn/logic/raid_stages.dart';
 import 'package:saturn/shizuku_api.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:xml/xml.dart';
 
 class RaidStagesPage extends StatefulWidget {
   const RaidStagesPage({super.key});
@@ -44,8 +45,8 @@ class _RaidStagesPageState extends State<RaidStagesPage> {
   }
 
   void _saveState() {
-    if (RaidStagesManager._xmlDocument != null) {
-      _undoStack.add(RaidStagesManager._xmlDocument!);
+    if (RaidStagesManager.xmlDocument != null) {
+      _undoStack.add(RaidStagesManager.xmlDocument!);
       if (_undoStack.length > MAX_UNDO) {
         _undoStack.removeAt(0);
       } else {
@@ -62,8 +63,8 @@ class _RaidStagesPageState extends State<RaidStagesPage> {
     
     _undoStackPos--;
     setState(() {
-      RaidStagesManager._xmlDocument = _undoStack[_undoStackPos];
-      RaidStagesManager._root = RaidStagesManager._xmlDocument!.findAllElements("Root").first;
+      RaidStagesManager.xmlDocument = _undoStack[_undoStackPos];
+      RaidStagesManager.root = RaidStagesManager.xmlDocument!.findAllElements("Root").first;
       _zones = RaidStagesManager.getZones();
     });
     
@@ -127,7 +128,7 @@ class _RaidStagesPageState extends State<RaidStagesPage> {
         ListTile(
           title: const Text('Save + Backup'),
           leading: const Icon(Icons.save),
-          onTap: () => RaidStagesManager.saveRaidStagesXml(),
+          onPressed: () => RaidStagesManager.saveRaidStagesXml(),
         ),
         ListTile(
           title: const Text('About'),
@@ -173,9 +174,9 @@ class _RaidStagesPageState extends State<RaidStagesPage> {
           if (parent != null && parent is XmlElement) {
             _selectedZone = parent;
             // Find warrior and fight
-            _selectedWarrior = battle.findAllElements("Warrior").firstOrNull;
-            _selectedFight = battle.findAllElements("Fight").firstOrNull;
-            _selectedRules = battle.findAllElements("Rules").firstOrNull;
+            _selectedWarrior = battle.xpath("Warrior").whereType<XmlElement>().firstOrNull;
+            _selectedFight = battle.xpath("Fight").whereType<XmlElement>().firstOrNull;
+            _selectedRules = battle.xpath("Rules").whereType<XmlElement>().firstOrNull;
           }
         }),
       ),
@@ -228,7 +229,7 @@ class _RaidStagesPageState extends State<RaidStagesPage> {
   }
 
   void _showXmlDialog(BuildContext context) {
-    if (RaidStagesManager._xmlDocument == null) return;
+    if (RaidStagesManager.xmlDocument == null) return;
     
     showDialog(
       context: context,
@@ -239,8 +240,8 @@ class _RaidStagesPageState extends State<RaidStagesPage> {
           height: 400,
           child: SingleChildScrollView(
             child: Text(
-              RaidStagesManager._xmlDocument!.toXmlString(pretty: true),
-              style: const FontFamily('monospace'),
+              RaidStagesManager.xmlDocument!.toXmlString(pretty: true),
+              style: const TextStyle(fontFamily: 'monospace'),
             ),
           ),
         ),
@@ -404,7 +405,7 @@ class _SearchBossDialogState extends State<SearchBossDialog> {
     
     for (final zone in RaidStagesManager.getZones()) {
       for (final battle in RaidStagesManager.getBattles(zone)) {
-        final warrior = battle.findAllElements("Warrior").firstOrNull;
+        final warrior = battle.xpath("Warrior").whereType<XmlElement>().firstOrNull;
         
         final values = [
           battle.getAttribute('Name') ?? '',

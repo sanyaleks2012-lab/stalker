@@ -13,8 +13,8 @@ class RaidStagesManager {
   static const raidStagesFilePath =
       "$userdataPath/raid_stages_default.xml";
 
-  static XmlDocument? _xmlDocument;
-  static XmlElement? _root;
+  static XmlDocument? xmlDocument;
+  static XmlElement? root;
 
   static Future<XmlDocument> loadRaidStagesXml() async {
     try {
@@ -35,8 +35,8 @@ class RaidStagesManager {
       final content = await readFile(raidStagesFilePath);
       final xmlDocument = XmlDocument.parse(content);
       
-      _xmlDocument = xmlDocument;
-      _root = xmlDocument.findAllElements("Root").first;
+      RaidStagesManager.xmlDocument = xmlDocument;
+      RaidStagesManager.root = xmlDocument.findAllElements("Root").first;
       
       return xmlDocument;
     } catch (e) {
@@ -55,10 +55,10 @@ class RaidStagesManager {
   }
 
   static Future<void> saveRaidStagesXml() async {
-    if (_xmlDocument == null) return;
+    if (xmlDocument == null) return;
     
     try {
-      final formattedXml = _xmlDocument!.toXmlString(pretty: true);
+      final formattedXml = xmlDocument!.toXmlString(pretty: true);
       await writeFile(raidStagesFilePath, formattedXml);
       Fluttertoast.showToast(msg: "Raid stages saved successfully");
     } catch (e) {
@@ -68,19 +68,19 @@ class RaidStagesManager {
   }
 
   static List<XmlElement> getZones() {
-    if (_root == null) return [];
-    final zonesNode = _root!.findAllElements("Zones").firstOrNull;
+    if (root == null) return [];
+    final zonesNode = root!.findAllElements("Zones").firstOrNull;
     if (zonesNode == null) return [];
     return zonesNode.findAllElements("Zone").toList();
   }
 
   static XmlElement? createZone({required String name, required String fileName}) {
-    if (_root == null) return null;
+    if (root == null) return null;
     
-    let zonesNode = _root!.findAllElements("Zones").firstOrNull;
+    final zonesNode = root!.findAllElements("Zones").firstOrNull;
     if (zonesNode == null) {
       zonesNode = XmlElement(XmlName("Zones"), []);
-      _root!.children.add(zonesNode);
+      root!.children.add(zonesNode);
     }
     
     final zone = XmlElement(
@@ -97,9 +97,9 @@ class RaidStagesManager {
   }
 
   static bool deleteZone(XmlElement zone) {
-    if (_root == null) return false;
+    if (root == null) return false;
     
-    final zonesNode = _root!.findAllElements("Zones").firstOrNull;
+    final zonesNode = root!.findAllElements("Zones").firstOrNull;
     if (zonesNode == null) return false;
     
     zonesNode.children.remove(zone);
