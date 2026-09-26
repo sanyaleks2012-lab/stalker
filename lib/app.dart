@@ -18,6 +18,8 @@ import 'package:saturn/pages/general.dart';
 import 'package:saturn/pages/records/records.dart';
 import 'package:saturn/logic/record.dart';
 import 'package:saturn/logic/records_manager.dart';
+import 'package:saturn/logic/raid_stages.dart';
+import 'package:saturn/pages/raid_stages/raid_stages_page.dart';
 import 'package:signals/signals.dart' as signals_core;
 import 'package:saturn/shizuku_api.dart';
 import 'package:saturn/shizuku_file.dart';
@@ -58,7 +60,8 @@ class _AppState extends State<App> {
     const RecordsPage(),
     const EditXmlPage(),
     const GeneralPage(),
-    const EquipmentPage()
+    const EquipmentPage(),
+    const RaidStagesPage(),
   ];
 
   Future<bool> _tryToConnectToShizuku(BuildContext context) async {
