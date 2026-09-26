@@ -30,6 +30,8 @@ class Record {
   static const String _disciplePath =
       "$_warriorPath/SessionSettings/ShowDojoDisciple/@Value";
   static const String _experiencePath = "$_warriorPath/@Experience";
+  static const String _avatarPath = "$_warriorPath/@Avatar";
+  static const String _firstNamePath = "$_warriorPath/@FirstName";
   static const String _unlimitedEnergyPath =
       "$_warriorPath/Items/Item[@Name=\"Unlimited_Energy\"]";
   static final XmlElement _unlimitedEnergyElement = XmlElement(
@@ -127,6 +129,22 @@ class Record {
 
   set experience(int value) {
     setAttribute(_experiencePath, value.toString());
+  }
+
+  String get firstName {
+    return _getAttribute(_firstNamePath) ?? "";
+  }
+
+  set firstName(String value) {
+    setAttribute(_firstNamePath, value);
+  }
+
+  String get avatar {
+    return _getAttribute(_avatarPath) ?? "";
+  }
+
+  set avatar(String value) {
+    setAttribute(_avatarPath, value);
   }
 
   bool get isEnergyUnlimited {

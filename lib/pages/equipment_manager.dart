@@ -175,28 +175,37 @@ class _EquipmentManagerState extends State<EquipmentManager> {
                   padding: const EdgeInsets.only(left: 8),
                   child: SplitFilledButton(
                       onLeftPressed: () {
-                        // Add
-                        final enabledTraits =
-                            traits.where((e) => e.enabled).map((e) => e.trait);
-                        final equipmentToAdd = widget.existingEquipment
-                            .where((e) => equipmentTypes
-                                .where((t) => t.enabled)
-                                .map((t) => t.type)
-                                .contains(EquipmentTypeExtension.fromId(e)!))
-                            .where((e) {
-                              final itemTraits = ItemDatabase.getTraits(e);
-                              return itemTraits
-                                      .any((t) => enabledTraits.contains(t)) ||
-                                  equipmentWithoutTraits && itemTraits.isEmpty;
-                            })
-                            .toSet()
-                            .difference(
-                                widget.ownedEquipment.map((e) => e.id).toSet());
+                        final enabledEquipmentTypes = equipmentTypes
+                            .where((t) => t.enabled)
+                            .map((t) => t.type)
+                            .toSet();
+                        final enabledTraits = traits
+                            .where((e) => e.enabled)
+                            .map((e) => e.trait)
+                            .toSet();
+                        
+                        final equipmentToAdd = widget.existingEquipment.where((equipmentId) {
+                          final equipmentType = EquipmentTypeExtension.fromId(equipmentId);
+                          if (equipmentType == null || !enabledEquipmentTypes.contains(equipmentType)) {
+                            return false;
+                          }
+                          if (widget.ownedEquipment.any((e) => e.id == equipmentId)) {
+                            return false;
+                          }
+                          final itemTraits = ItemDatabase.getTraits(equipmentId);
+                          if (itemTraits.isNotEmpty) {
+                            return itemTraits.any((t) => enabledTraits.contains(t));
+                          }
+                          return equipmentWithoutTraits;
+                        }).toSet();
+
                         for (var equipmentId in equipmentToAdd) {
-                          final equipmentType =
-                              EquipmentTypeExtension.fromId(equipmentId)!;
-                          final equipment = Equipment(equipmentType,
-                              equipmentId, equipmentLevel, equipmentUpgrade);
+                          final equipmentType = EquipmentTypeExtension.fromId(equipmentId)!;
+                          final equipment = Equipment(
+                              equipmentType,
+                              equipmentId,
+                              equipmentLevel,
+                              equipmentUpgrade);
                           equipment.enchantments =
                               ItemDatabase.getEnchantments(equipmentId)
                                   .map((ench) => AppliedEnchantment(
@@ -205,49 +214,64 @@ class _EquipmentManagerState extends State<EquipmentManager> {
                                           ? AppliedEnchantment.maxAspect
                                           : null))
                                   .toList();
-                          RecordsManager.activeRecord!.equipment[equipmentType]!
-                              .add(equipment);
+                          RecordsManager.activeRecord!.equipment[equipmentType]!.add(equipment);
                           widget.ownedEquipment.add(equipment);
                         }
-                        if (shouldSaveRecord) {
-                          RecordsManager.saveRecord(
-                                  RecordsManager.activeRecord!)
-                              .then((_) {
-                            setState(() => status =
-                                "Added ${equipmentToAdd.length} items");
-                          });
-                        } else {
+                        
+                        if (equipmentToAdd.isNotEmpty) {
+                          if (shouldSaveRecord) {
+                            RecordsManager.saveRecord(
+                                    RecordsManager.activeRecord!)
+                                .then((_) {
+                              setState(() => status =
+                                  "Added ${equipmentToAdd.length} items");
+                            });
+                          } else {
+                            setState(() {
+                              status = "Added ${equipmentToAdd.length} items";
+                            });
+                          }
+                        } else if (!shouldSaveRecord) {
                           setState(() {
-                            status = "Added ${equipmentToAdd.length} items";
+                            status = "No items to add";
                           });
                         }
                       },
                       onRightPressed: () {
-                        final enabledTraits =
-                            traits.where((e) => e.enabled).map((e) => e.trait);
-                        final equipmentToRemove =
-                            widget.ownedEquipment.where((e) {
-                          var itemTraits = ItemDatabase.getTraits(e.id);
-                          return itemTraits
-                                  .any((t) => enabledTraits.contains(t)) ||
-                              equipmentWithoutTraits && itemTraits.isEmpty;
+                        final enabledTraits = traits
+                            .where((e) => e.enabled)
+                            .map((e) => e.trait)
+                            .toSet();
+                        
+                        final equipmentToRemove = widget.ownedEquipment.where((equipment) {
+                          final itemTraits = ItemDatabase.getTraits(equipment.id);
+                          if (itemTraits.isNotEmpty) {
+                            return itemTraits.any((t) => enabledTraits.contains(t));
+                          }
+                          return equipmentWithoutTraits;
                         }).toList();
+                        
                         for (var equipment in equipmentToRemove) {
-                          RecordsManager.activeRecord!.equipment[equipment.type]
-                              ?.remove(equipment);
+                          RecordsManager.activeRecord!.equipment[equipment.type]?.remove(equipment);
                           widget.ownedEquipment.remove(equipment);
                         }
-                        if (shouldSaveRecord) {
-                          RecordsManager.saveRecord(
-                                  RecordsManager.activeRecord!)
-                              .then((_) {
-                            setState(() => status =
-                                "Removed ${equipmentToRemove.length} items");
-                          });
-                        } else {
+                        
+                        if (equipmentToRemove.isNotEmpty) {
+                          if (shouldSaveRecord) {
+                            RecordsManager.saveRecord(
+                                    RecordsManager.activeRecord!)
+                                .then((_) {
+                              setState(() => status =
+                                  "Removed ${equipmentToRemove.length} items");
+                            });
+                          } else {
+                            setState(() {
+                              status = "Removed ${equipmentToRemove.length} items";
+                            });
+                          }
+                        } else if (!shouldSaveRecord) {
                           setState(() {
-                            status =
-                                "Removed ${equipmentToRemove.length} items";
+                            status = "No items to remove";
                           });
                         }
                       },

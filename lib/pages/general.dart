@@ -98,6 +98,20 @@ class _GeneralPageState extends State<GeneralPage> {
               text: RecordsManager.activeRecord!.experience.toString()),
           (value) {
         RecordsManager.activeRecord!.experience = int.tryParse(value) ?? 0;
+      }),
+      Field(
+          "assets/images/house.png",
+          "FirstName",
+          TextEditingController(
+              text: RecordsManager.activeRecord!.firstName), (value) {
+        RecordsManager.activeRecord!.firstName = value;
+      }),
+      Field(
+          "assets/images/treasure-chest.png",
+          "Avatar",
+          TextEditingController(
+              text: RecordsManager.activeRecord!.avatar), (value) {
+        RecordsManager.activeRecord!.avatar = value;
       })
     ];
 
